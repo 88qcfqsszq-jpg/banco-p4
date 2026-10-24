@@ -1,0 +1,739 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e1420" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f3f5f8" media="(prefers-color-scheme: light)">
+<meta name="description" content="Exatamente: banco de questões do 4º período de Medicina (HAM, SOI, IESC, Integradora e MAPES).">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Exatamente">
+<title>Exatamente</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+<style>
+/* Exatamente: ink + amber. One accent = "selected/active", green/red only for right/wrong. Mobile-first app shell with bottom tab bar. */
+:root{
+  --bg:#f3f5f8; --surface:#ffffff; --surface2:#eef1f5; --line:#dde3ea; --line2:#c9d2dc;
+  --fg:#111a27; --muted:#5a6878; --faint:#8a97a6;
+  --acc:#f2b233; --acc-ink:#2a1c00; --acc-strong:#a86b00; --acc-soft:rgba(242,178,51,.16);
+  --ok:#1f9d6b; --ok-soft:rgba(31,157,107,.12); --bad:#d64a3f; --bad-soft:rgba(214,74,63,.10);
+  --sug:#7b52c9; --sug-soft:rgba(123,82,201,.12);
+  --shadow:0 1px 2px rgba(17,26,39,.06),0 4px 16px rgba(17,26,39,.06);
+  --display:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif;
+  --body:"Figtree",-apple-system,system-ui,"Segoe UI",sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e1420; --surface:#161e2c; --surface2:#1d2738; --line:#283346; --line2:#36435a;
+  --fg:#eef2f7; --muted:#9eabbc; --faint:#6f7d90;
+  --acc:#f5b83d; --acc-ink:#231803; --acc-strong:#f5b83d; --acc-soft:rgba(245,184,61,.14);
+  --ok:#3ccf95; --ok-soft:rgba(60,207,149,.13); --bad:#f26a5f; --bad-soft:rgba(242,106,95,.13);
+  --sug:#b893f5; --sug-soft:rgba(184,147,245,.14);
+  --shadow:0 1px 2px rgba(0,0,0,.25);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0e1420; --surface:#161e2c; --surface2:#1d2738; --line:#283346; --line2:#36435a;
+  --fg:#eef2f7; --muted:#9eabbc; --faint:#6f7d90;
+  --acc:#f5b83d; --acc-ink:#231803; --acc-strong:#f5b83d; --acc-soft:rgba(245,184,61,.14);
+  --ok:#3ccf95; --ok-soft:rgba(60,207,149,.13); --bad:#f26a5f; --bad-soft:rgba(242,106,95,.13);
+  --sug:#b893f5; --sug-soft:rgba(184,147,245,.14);
+  --shadow:0 1px 2px rgba(0,0,0,.25);
+  color-scheme:dark;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;padding-top:env(safe-area-inset-top,0px)}
+img{max-width:100%}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;padding:0}
+button:focus-visible,textarea:focus-visible,select:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--acc);outline-offset:2px;border-radius:8px}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.15;text-wrap:balance;letter-spacing:-.01em}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.small{font-size:13.5px}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+main.wrap{padding-block:8px 120px}
+
+/* app bar */
+.appbar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid transparent}
+.appbar.scrolled{border-bottom-color:var(--line)}
+.appbar .wrap{display:flex;align-items:center;gap:10px;min-height:56px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:21px;letter-spacing:-.02em}
+.brand svg{width:30px;height:30px;flex:none}
+.brand b{color:var(--acc-strong)}
+.appbar .sp{flex:1}
+.iconbtn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;color:var(--muted)}
+.iconbtn:hover{background:var(--surface2)}
+.iconbtn svg{width:22px;height:22px}
+.backbtn{display:inline-flex;align-items:center;gap:4px;font-weight:600;color:var(--muted);padding:8px 6px 8px 0;font-size:15px}
+.backbtn svg{width:20px;height:20px}
+
+/* bottom tab bar */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tabbar .wrap{display:grid;grid-template-columns:repeat(3,1fr)}
+.tabbar button{display:grid;justify-items:center;gap:2px;padding:9px 4px 8px;color:var(--faint);font-size:12px;font-weight:600}
+.tabbar button svg{width:24px;height:24px}
+.tabbar button[aria-current="page"]{color:var(--fg)}
+.tabbar button[aria-current="page"] .pip{background:var(--acc)}
+.tabbar .pip{width:26px;height:4px;border-radius:4px;background:transparent;margin-bottom:3px}
+
+/* cards & sections */
+.sec{margin-top:22px;display:grid;gap:12px}
+.sec-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.sec-h h2{font-size:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.hello{padding:18px;display:grid;gap:14px}
+.hello h1{font-size:clamp(24px,6vw,30px)}
+.statrow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--surface2);border-radius:12px;padding:10px 12px;display:grid;gap:2px;min-width:0}
+.stat span{font-size:12.5px;color:var(--muted);font-weight:600}
+.stat b{font-family:var(--display);font-size:24px;font-weight:800}
+.stat b.bad{color:var(--bad)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border-radius:12px;font-weight:700;font-size:16px;border:1.5px solid var(--line2);background:var(--surface);color:var(--fg)}
+.btn svg{width:20px;height:20px}
+.btn.primary{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.btn.primary:active{filter:brightness(.95)}
+.btn.block{width:100%}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.ghost{border-color:transparent;background:none;color:var(--muted)}
+.btn.danger{color:var(--bad);border-color:var(--bad)}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btns .btn{flex:1 1 auto}
+
+.search{position:relative}
+.search input{width:100%;height:46px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);font:inherit;padding:0 14px 0 42px}
+.search svg{position:absolute;left:13px;top:13px;width:20px;height:20px;color:var(--faint)}
+
+.area{overflow:hidden}
+.area-h{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px 10px}
+.area-h h3{font-size:17px}
+.trow{display:grid;grid-template-columns:minmax(0,1fr) auto 18px;gap:4px 12px;align-items:center;padding:13px 16px;border-top:1px solid var(--line);width:100%;text-align:left}
+.trow:active,.trow:hover{background:var(--surface2)}
+.trow .nm{font-weight:600;font-size:15.5px;min-width:0}
+.trow .meta{font-size:12.5px;color:var(--muted);grid-column:1/2}
+.trow .pct{grid-row:1/3;grid-column:2;font-size:13px;font-weight:700;color:var(--muted)}
+.trow .chev{grid-row:1/3;grid-column:3;color:var(--faint)}
+.trow .chev svg{width:18px;height:18px}
+.trow .bar{grid-column:1/2}
+.bar{height:5px;background:var(--surface2);border-radius:5px;overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+.bar .g{background:var(--ok)} .bar .r{background:var(--bad)}
+.hot{display:inline-flex;align-items:center;gap:4px;font-weight:700;color:var(--acc-strong)}
+
+/* topic / detail screens */
+.detail-h{display:grid;gap:6px;margin-top:4px}
+.detail-h .kicker{font-size:13px;font-weight:700;color:var(--acc-strong);text-transform:uppercase;letter-spacing:.06em}
+.detail-h h1{font-size:clamp(24px,6.5vw,32px)}
+.pane{padding:16px;display:grid;gap:14px}
+.label{font-weight:700;font-size:15px}
+.hint{font-size:13.5px;color:var(--muted)}
+.mini{display:flex;flex-wrap:wrap;gap:6px}
+.tagc{font-size:12.5px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--surface2);color:var(--muted)}
+
+/* selectable chips: clearly different when on */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:7px;text-align:left;min-height:42px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line2);background:var(--surface);font-weight:600;font-size:14.5px;color:var(--fg)}
+.chip .ck{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--line2);display:grid;place-items:center;flex:none}
+.chip .ck svg{width:12px;height:12px;opacity:0}
+.chip .n{font-size:12.5px;color:var(--muted);font-weight:600}
+.chip[aria-pressed="true"]{background:var(--acc-soft);border-color:var(--acc);}
+.chip[aria-pressed="true"] .ck{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.chip[aria-pressed="true"] .ck svg{opacity:1}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--surface2);border-radius:12px;padding:4px;gap:4px}
+.seg button{min-height:40px;border-radius:9px;font-weight:600;font-size:14.5px;color:var(--muted);padding:0 8px}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,.18);outline:2px solid var(--acc);outline-offset:-2px}
+details.grp{border-top:1px solid var(--line)}
+details.grp:first-of-type{border-top:0}
+details.grp summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 0}
+details.grp summary::-webkit-details-marker{display:none}
+details.grp summary .t{font-weight:700}
+details.grp summary .c{font-size:13px;color:var(--muted);display:flex;gap:10px;align-items:center}
+details.grp summary .c svg{width:18px;height:18px;transition:transform .2s}
+details.grp[open] summary .c svg{transform:rotate(180deg)}
+details.grp .chips{padding-bottom:14px}
+.linkbtn{color:var(--acc-strong);font-weight:700;font-size:14px}
+.selrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+select{min-height:42px;background:var(--surface);color:var(--fg);border:1.5px solid var(--line2);border-radius:10px;padding:0 10px;font:inherit;font-weight:600}
+.toggle{display:flex;align-items:center;gap:12px;justify-content:space-between;width:100%;text-align:left;padding:4px 0}
+.toggle .tx{display:grid;gap:2px}
+.toggle .tx b{font-size:15px}
+.sw{width:50px;height:30px;border-radius:30px;background:var(--line2);position:relative;flex:none;transition:background .2s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .2s}
+.toggle[aria-checked="true"] .sw{background:var(--acc)}
+.toggle[aria-checked="true"] .sw::after{transform:translateX(20px)}
+.dock{position:fixed;left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom,0px));z-index:25;padding-block:10px}
+.dock .wrap{display:flex;align-items:center;gap:12px}
+.dock .inner{display:flex;align-items:center;gap:12px;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:10px 10px 10px 16px;box-shadow:0 8px 30px rgba(0,0,0,.18)}
+.dock .cnt{flex:1;min-width:0;line-height:1.2}
+.dock .cnt b{font-family:var(--display);font-size:22px}
+
+/* discipline cards */
+.dgrid{display:grid;gap:12px}
+.dcard{padding:16px;display:grid;gap:12px}
+.dcard h3{font-size:19px}
+.exams{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.exam{min-height:54px;border-radius:12px;border:1.5px solid var(--line2);background:var(--surface);display:grid;place-items:center;align-content:center;gap:0;font-weight:700}
+.exam small{font-weight:600;color:var(--muted);font-size:12px}
+.exam:active,.exam:hover{border-color:var(--acc);background:var(--acc-soft)}
+.inc{display:grid;gap:6px}
+.inc-row{display:grid;grid-template-columns:minmax(0,1fr) 70px 22px;gap:8px;align-items:center;font-size:13.5px}
+.inc-row span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.inc-row .b{height:6px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.inc-row .b i{display:block;height:100%;background:var(--acc)}
+
+/* quiz */
+.qtop{position:sticky;top:0;z-index:20;background:var(--bg);padding-top:6px}
+.qtop .row{display:flex;align-items:center;gap:12px;min-height:50px}
+.qprog{flex:1;height:8px;background:var(--surface2);border-radius:8px;overflow:hidden}
+.qprog i{display:block;height:100%;background:var(--acc);border-radius:8px;transition:width .3s}
+.qcount{font-weight:700;font-size:14px}
+.timer{font-weight:700;font-size:14px;color:var(--muted)}
+.dots{display:flex;gap:6px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:none}
+.dots::-webkit-scrollbar{display:none}
+.dots button{flex:none;width:34px;height:34px;border-radius:10px;border:1.5px solid var(--line2);font-weight:700;font-size:13px;color:var(--muted);background:var(--surface)}
+.dots button.ans{background:var(--surface2);color:var(--fg)}
+.dots button.ok{border-color:var(--ok);color:var(--ok)}
+.dots button.bad{border-color:var(--bad);color:var(--bad)}
+.dots button.cur{border-color:var(--acc);background:var(--acc);color:var(--acc-ink)}
+.qcard{padding:18px 16px;display:grid;gap:14px;margin-top:6px}
+.qtags{display:flex;flex-wrap:wrap;gap:6px}
+.qt{font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--surface2);color:var(--muted)}
+.qt.d{background:var(--acc-soft);color:var(--acc-strong)}
+.qt.sug{background:var(--sug-soft);color:var(--sug)}
+.qt.open{background:var(--surface2);color:var(--fg)}
+.stem{margin:0;white-space:pre-line;font-size:17px;line-height:1.6}
+.stem .ask{display:block;margin-top:12px;font-weight:700}
+.imgs{display:grid;gap:8px}
+.imgs.two{grid-template-columns:1fr 1fr}
+.film{position:relative;background:#000;border-radius:12px;overflow:hidden;display:block;width:100%}
+.film img{display:block;width:100%;max-height:360px;object-fit:contain}
+.film .zoom{position:absolute;right:8px;bottom:8px;display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;background:rgba(0,0,0,.65);color:#fff;border-radius:8px;padding:5px 8px}
+.film .zoom svg{width:14px;height:14px}
+.opts{display:grid;gap:10px;margin-top:4px}
+.opt{position:relative;display:grid;grid-template-columns:34px 1fr auto;gap:12px;align-items:start;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:13px 12px;text-align:left;width:100%;min-width:0;cursor:pointer;transition:border-color .12s,background .12s}
+.opt .k{width:34px;height:34px;border-radius:50%;border:2px solid var(--line2);display:grid;place-items:center;font-weight:800;font-size:15px;color:var(--muted)}
+.opt .tx{font-size:16px;min-width:0;white-space:pre-line;padding-top:5px}
+.opt .cut{font-size:12px;font-weight:700;color:var(--faint);padding:6px 4px;border-radius:8px}
+.opt.sel{border-color:var(--acc);background:var(--acc-soft)}
+.opt.sel .k{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.opt.out .tx{text-decoration:line-through;color:var(--faint)} .opt.out .k{opacity:.4}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)} .opt.right .k{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)} .opt.wrong .k{background:var(--bad);border-color:var(--bad);color:#fff}
+.opt[aria-disabled="true"]{cursor:default}
+.opt .badge{position:absolute;top:-10px;right:12px;font-size:11.5px;font-weight:800;padding:2px 8px;border-radius:999px}
+.opt.sel .badge{background:var(--acc);color:var(--acc-ink)}
+.opt.right .badge{background:var(--ok);color:#fff}
+.opt.wrong .badge{background:var(--bad);color:#fff}
+textarea{width:100%;min-height:100px;resize:vertical;background:var(--surface);color:var(--fg);border:1.5px solid var(--line2);border-radius:12px;padding:12px;font:inherit;font-size:16px}
+.fb{border-radius:14px;padding:16px;display:grid;gap:10px;border:2px solid var(--line)}
+.fb.ok{border-color:var(--ok);background:var(--ok-soft)}
+.fb.bad{border-color:var(--bad);background:var(--bad-soft)}
+.fb.neu{border-color:var(--line2);background:var(--surface2)}
+.fb h3{font-size:19px;display:flex;align-items:center;gap:8px}
+.fb h3 svg{width:22px;height:22px}
+.fb.ok h3{color:var(--ok)} .fb.bad h3{color:var(--bad)}
+.fb p{margin:0}
+.fb .com{white-space:pre-line;font-size:15.5px;line-height:1.6}
+.fb .mine{border-left:3px solid var(--acc);padding-left:10px;color:var(--muted);font-style:italic;white-space:pre-line}
+.fb .expect{border-left:3px solid var(--ok);padding-left:10px;white-space:pre-line;font-weight:600}
+.fb .ref{font-size:12.5px;color:var(--faint)}
+.fb .warn{font-size:13.5px;color:var(--sug);font-weight:600}
+.qbar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:color-mix(in srgb,var(--surface) 94%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:10px 0 calc(10px + env(safe-area-inset-bottom,0px))}
+.qbar .wrap{display:flex;gap:10px;align-items:center}
+.qbar .btn.primary{flex:1}
+.qbar .note{flex:1;font-size:14px;color:var(--muted);font-weight:600;text-align:center}
+.sheet-bg{position:fixed;inset:0;z-index:60;background:rgba(5,10,18,.5);display:grid;align-items:end}
+.sheet{background:var(--surface);border-radius:20px 20px 0 0;padding:20px max(16px,env(safe-area-inset-left,0px)) calc(20px + env(safe-area-inset-bottom,0px));display:grid;gap:12px;max-width:760px;width:100%;margin:0 auto}
+.sheet h3{font-size:20px}
+
+/* results */
+.score{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;padding:18px}
+.ring{width:110px;height:110px}
+.score h1{font-size:clamp(24px,6vw,32px)}
+.tline{display:grid;grid-template-columns:minmax(0,1fr) 90px 44px;gap:10px;align-items:center;font-size:14.5px;padding:8px 0;border-top:1px solid var(--line)}
+.tline:first-child{border-top:0}
+.tline .b{height:8px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.tline .b i{display:block;height:100%}
+.ritem{border-top:1px solid var(--line)}
+.ritem:first-child{border-top:0}
+.ritem summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:12px 1fr auto;gap:12px;align-items:center;padding:13px 16px}
+.ritem summary::-webkit-details-marker{display:none}
+.ritem .st{width:12px;height:12px;border-radius:50%}
+.ritem .sm{font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.ritem .rk{font-size:13px;font-weight:700;color:var(--muted)}
+.ritem .body{padding:0 16px 16px;display:grid;gap:10px;font-size:15px}
+.ritem .body p{margin:0}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:80;background:var(--fg);color:var(--bg);font-weight:600;font-size:14.5px;padding:11px 16px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.25);max-width:calc(100% - 32px)}
+
+/* viewer */
+.viewer{position:fixed;inset:0;z-index:90;background:#000;display:grid;grid-template-rows:auto 1fr auto;color:#fff}
+.vtop,.vbot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px max(14px,env(safe-area-inset-right,0px)) 10px max(14px,env(safe-area-inset-left,0px));background:#0b0f15;font-size:13px}
+.vtop{padding-top:calc(10px + env(safe-area-inset-top,0px));justify-content:space-between}
+.vbot{padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+.vstage{overflow:hidden;position:relative;touch-action:none}
+.vstage img{position:absolute;left:50%;top:50%;max-width:none;transform-origin:center;user-select:none;-webkit-user-drag:none}
+.vbtn{background:#1c2430;border:1px solid #2e3a4a;color:#fff;border-radius:10px;padding:8px 12px;font-weight:600;font-size:13px}
+.vbot label{display:flex;align-items:center;gap:6px}
+.vbot input[type=range]{width:100px;accent-color:#f5b83d}
+.empty{padding:22px;text-align:center;color:var(--muted)}
+@media (min-width:700px){.dgrid{grid-template-columns:1fr 1fr}}
+@media (max-width:380px){.statrow .stat b{font-size:20px}.imgs.two{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="appbar" id="appbar"><div class="wrap" id="appbarIn"></div></header>
+<main class="wrap" id="app"></main>
+<nav class="tabbar" id="tabbar" aria-label="Navegação"><div class="wrap">
+  <button data-nav="temas"><span class="pip"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="7" height="7" rx="2"/><rect x="14" y="4" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>Temas</button>
+  <button data-nav="disc"><span class="pip"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/><path d="M9 8h6"/></svg>Provas</button>
+  <button data-nav="build"><span class="pip"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M4 12h7M4 18h10"/><circle cx="18" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>Simulado</button>
+</div></nav>
+
+<div class="viewer" id="viewer" hidden>
+  <div class="vtop"><span id="vlabel">Imagem</span><button class="vbtn" id="vclose">Fechar</button></div>
+  <div class="vstage" id="vstage"><img id="vimg" alt=""></div>
+  <div class="vbot">
+    <button class="vbtn" id="vzin">＋ Zoom</button><button class="vbtn" id="vzout">－ Zoom</button>
+    <label for="vbright">Brilho <input type="range" id="vbright" min="40" max="200" value="100"></label>
+    <label for="vcont">Contraste <input type="range" id="vcont" min="40" max="250" value="100"></label>
+    <button class="vbtn" id="vinv">Inverter</button><button class="vbtn" id="vreset">Resetar</button>
+  </div>
+</div>
+<div id="sheetRoot"></div>
+<div class="toast" id="toast" hidden></div>
+
+<script src="dados.js"></script>
+<script>
+/* ============ data ============ */
+const DATA = window.DATA, IMG = window.IMG || {};
+const Q = DATA.q, BYID = Object.fromEntries(Q.map(q=>[q.id,q])), AREAS = DATA.areas;
+const TOP = {}; AREAS.forEach(a=>a.t.forEach(t=>{TOP[t.id]={n:t.n,a:a.id,an:a.n}}));
+const DISC = {HAM:{n:'HAM IV',full:'Habilidades e Atitudes Médicas IV'},SOI:{n:'SOI IV',full:'Sistemas Orgânicos Integrados IV'},IESC:{n:'IESC IV',full:'Integração Ensino-Serviço-Comunidade IV'},INT:{n:'Integradora',full:'Avaliação Integradora do 4º período'},RAD:{n:'Radiologia',full:'MAPES · Laboratório de Imagem'},FARM:{n:'Farmacologia',full:'MAPES · Laboratório de Farmacologia'}};
+const DORDER = ['HAM','SOI','IESC','INT','RAD','FARM'];
+const isMapes = d => d==='RAD'||d==='FARM';
+const EXAMS = {}; Q.forEach(q=>{(EXAMS[q.d+'|'+q.sem]=EXAMS[q.d+'|'+q.sem]||[]).push(q)}); Object.values(EXAMS).forEach(l=>l.sort((a,b)=>a.n-b.n));
+const SEMS = [...new Set(Q.filter(q=>!isMapes(q.d)).map(q=>q.sem))].sort();
+const byTopic = {}; Q.forEach(q=>(byTopic[q.t]=byTopic[q.t]||[]).push(q));
+
+/* ============ storage ============ */
+const KEY='p4bank-v1';
+let store={h:{}};
+try{const raw=localStorage.getItem(KEY); if(raw){store=JSON.parse(raw)||store; if(!store.h) store.h={};}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}}
+let theme=null; try{theme=localStorage.getItem('exatamente-theme')}catch(e){}
+function applyTheme(){ if(theme) document.documentElement.dataset.theme=theme; else delete document.documentElement.dataset.theme; }
+applyTheme();
+
+/* ============ helpers ============ */
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const hist=q=>store.h[q.id];
+function statsOf(l){let g=0,r=0;l.forEach(q=>{const h=hist(q);if(h){h.last?g++:r++;}});return{n:l.length,g,r,done:g+r}}
+const bar=s=>`<span class="bar"><i class="g" style="width:${s.n?s.g/s.n*100:0}%"></i><i class="r" style="width:${s.n?s.r/s.n*100:0}%"></i></span>`;
+const wrongList=()=>Q.filter(q=>hist(q)&&hist(q).last===false);
+const qLabel=q=>isMapes(q.d)?`${DISC[q.d].n} · MAPES`:`${DISC[q.d].n} ${q.sem}`;
+const examsCount=l=>new Set(l.filter(q=>!isMapes(q.d)).map(q=>q.d+q.sem)).size;
+const imgSrc=f=>IMG[f]||('img/'+f);
+const I={
+  chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
+  back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  down:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>',
+  search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>',
+  moon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  sun:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
+  play:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>',
+  zoom:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>',
+  fire:'<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M12 2c1 4 5 5.5 5 10.5A5 5 0 0 1 7 12.5c0-2 1-3.5 2-4.5 0 2 1 3 2 3 0-3-1-6 1-9z"/></svg>',
+  logo:'<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="9" y="3" width="14" height="17" rx="2.5" fill="var(--acc)"/><path d="M12 8h8M12 11.5h5" stroke="var(--acc-ink)" stroke-width="2" stroke-linecap="round"/><circle cx="13" cy="15.5" r="1.6" fill="var(--acc-ink)"/><rect x="4" y="12" width="24" height="14" rx="2.5" fill="none" stroke="var(--fg)" stroke-width="2.4"/><path d="M1.5 28h29" stroke="var(--fg)" stroke-width="2.6" stroke-linecap="round"/></svg>'
+};
+let toastT=null;
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,2200);}
+function stemHTML(s){
+  const i=s.lastIndexOf('\n\n'); let head=s,ask='';
+  if(i>0&&s.length-i<420){head=s.slice(0,i);ask=s.slice(i+2);}
+  else{const j=s.lastIndexOf('\n');const tail=j>0?s.slice(j+1):'';if(j>0&&tail.length<300&&/assinale|marque|qual|quais|correta|correto|responda|indique|identifique|analise|conduta|:$|\?$/i.test(tail)){head=s.slice(0,j);ask=tail;}}
+  return esc(head)+(ask?'<span class="ask">'+esc(ask)+'</span>':'');
+}
+
+/* ============ navigation ============ */
+const app=document.getElementById('app'), appbarIn=document.getElementById('appbarIn'), tabbar=document.getElementById('tabbar');
+let NAV={tab:'temas',view:'home',topic:null};
+let S=null; let timerId=null; let search='';
+const F={d:new Set(DORDER),t:new Set(Object.keys(TOP)),s0:SEMS[0],s1:SEMS[SEMS.length-1],kind:'all',ofc:false,status:'all',count:20,mode:'treino',just:false};
+window.addEventListener('scroll',()=>document.getElementById('appbar').classList.toggle('scrolled',scrollY>4),{passive:true});
+tabbar.querySelectorAll('[data-nav]').forEach(b=>b.onclick=()=>{NAV={tab:b.dataset.nav,view:'home'};render();window.scrollTo(0,0);});
+
+function appbar(opts={}){
+  const tbtn=`<button class="iconbtn" id="themeBtn" aria-label="Alternar tema claro/escuro">${isDark()?I.sun:I.moon}</button>`;
+  if(opts.back) appbarIn.innerHTML=`<button class="backbtn" id="backBtn">${I.back}${esc(opts.back)}</button><span class="sp"></span>${tbtn}`;
+  else appbarIn.innerHTML=`<div class="brand">${I.logo}<span>Exata<b>mente</b></span></div><span class="sp"></span>${tbtn}`;
+  document.getElementById('themeBtn').onclick=()=>{theme=isDark()?'light':'dark';try{localStorage.setItem('exatamente-theme',theme)}catch(e){}applyTheme();render();};
+  const bb=document.getElementById('backBtn'); if(bb) bb.onclick=opts.onBack;
+}
+function isDark(){ if(theme) return theme==='dark'; return matchMedia('(prefers-color-scheme: dark)').matches; }
+function setTabs(show){
+  document.getElementById('appbar').hidden=!show&&!!S;
+  tabbar.hidden=!show;
+  tabbar.querySelectorAll('[data-nav]').forEach(b=>b.setAttribute('aria-current',b.dataset.nav===NAV.tab?'page':'false'));
+}
+function render(){
+  clearInterval(timerId);
+  if(S&&!S.end){renderQ();return;}
+  if(S&&S.end){renderResult();return;}
+  setTabs(true);
+  if(NAV.view==='topic'){renderTopic(NAV.topic);return;}
+  appbar();
+  if(NAV.tab==='temas') renderTemas(); else if(NAV.tab==='disc') renderDisc(); else renderBuild();
+}
+
+/* ============ Temas ============ */
+function renderTemas(){
+  const seen=Q.filter(hist).length, right=Q.filter(q=>hist(q)&&hist(q).last).length, wrong=wrongList().length;
+  const fresh=Q.filter(q=>!hist(q)).length;
+  const qn=search.trim().toLowerCase();
+  app.innerHTML=`
+  <section class="card hello">
+    <div><h1>${seen?'Bora continuar.':'Escolha um tema e comece.'}</h1><p class="muted small" style="margin:4px 0 0">${Q.length} questões de HAM, SOI, IESC, Integradora e MAPES do 4º período.</p></div>
+    <div class="statrow">
+      <div class="stat"><span>Feitas</span><b class="num">${seen}</b></div>
+      <div class="stat"><span>Acerto</span><b class="num">${seen?Math.round(right/seen*100)+'%':'—'}</b></div>
+      <div class="stat"><span>Revisar</span><b class="num ${wrong?'bad':''}">${wrong}</b></div>
+    </div>
+    <div class="btns">
+      <button class="btn primary" id="quick">${I.play}Treino rápido · 10</button>
+      ${wrong?`<button class="btn" id="goWrong">Refazer erros (${wrong})</button>`:''}
+    </div>
+  </section>
+  <section class="sec">
+    <div class="search">${I.search}<input id="q" type="search" placeholder="Buscar tema (ex.: cirrose, pré-natal)" value="${esc(search)}" autocomplete="off"></div>
+    ${AREAS.map(a=>{
+      const ts=a.t.filter(t=>byTopic[t.id]&&(!qn||t.n.toLowerCase().includes(qn)||a.n.toLowerCase().includes(qn)));
+      if(!ts.length) return '';
+      const st=statsOf(Q.filter(q=>TOP[q.t].a===a.id));
+      return `<div class="card area"><div class="area-h"><h3>${esc(a.n)}</h3><span class="small muted num">${st.done}/${st.n}</span></div>
+      ${ts.map(t=>{const l=byTopic[t.id],s=statsOf(l),ex=examsCount(l);const pct=s.done?Math.round(s.g/s.done*100)+'%':'';
+        return `<button class="trow" data-topic="${t.id}"><span class="nm">${esc(t.n)}</span>
+          <span class="pct num">${pct}</span><span class="chev">${I.chev}</span>
+          <span class="meta num">${l.length} questões · ${ex>=10?`<span class="hot">${I.fire}caiu em ${ex} provas</span>`:`caiu em ${ex} provas`}</span>${bar(s)}</button>`}).join('')}
+      </div>`}).join('')||'<div class="card empty">Nenhum tema encontrado.</div>'}
+  </section>`;
+  const qi=document.getElementById('q'); qi.oninput=()=>{search=qi.value;const pos=qi.selectionStart;renderTemas();const n=document.getElementById('q');n.focus();try{n.setSelectionRange(pos,pos)}catch(e){}};
+  app.querySelectorAll('[data-topic]').forEach(b=>b.onclick=()=>{NAV={tab:'temas',view:'topic',topic:b.dataset.topic};render();window.scrollTo(0,0);});
+  document.getElementById('quick').onclick=()=>{const pool=Q.filter(q=>q.k==='mc'&&!q.dup);const fresh=pool.filter(q=>!hist(q));start(shuffle(fresh.length>=10?fresh:pool).slice(0,10),{title:'Treino rápido'});};
+  const gw=document.getElementById('goWrong'); if(gw) gw.onclick=()=>start(shuffle(wrongList()),{title:'Revisão de erros'});
+}
+
+/* ============ Topic screen ============ */
+let TOPT={count:10,mode:'treino',which:'all'};
+function renderTopic(tid){
+  const t=TOP[tid], l=byTopic[tid].filter(q=>!q.dup), s=statsOf(l), ex=examsCount(l);
+  appbar({back:'Temas',onBack:()=>{NAV={tab:'temas',view:'home'};render();}});
+  const perD={}; l.forEach(q=>perD[q.d]=(perD[q.d]||0)+1);
+  const wrong=l.filter(q=>hist(q)&&hist(q).last===false), fresh=l.filter(q=>!hist(q));
+  const src=TOPT.which==='new'?fresh:TOPT.which==='wrong'?wrong:l;
+  const srcMode=TOPT.mode==='prova'?src.filter(q=>q.k==='mc'):src;
+  const n=TOPT.count?Math.min(TOPT.count,srcMode.length):srcMode.length;
+  app.innerHTML=`
+  <div class="detail-h"><span class="kicker">${esc(t.an)}</span><h1>${esc(t.n)}</h1></div>
+  <div class="statrow" style="margin-top:14px">
+    <div class="stat"><span>Questões</span><b class="num">${l.length}</b></div>
+    <div class="stat"><span>Caiu em</span><b class="num">${ex} <small style="font-size:13px;font-weight:600">provas</small></b></div>
+    <div class="stat"><span>Acerto</span><b class="num">${s.done?Math.round(s.g/s.done*100)+'%':'—'}</b></div>
+  </div>
+  <div class="mini" style="margin-top:12px">${DORDER.filter(d=>perD[d]).map(d=>`<span class="tagc">${esc(DISC[d].n)} · ${perD[d]}</span>`).join('')}</div>
+  <section class="card pane" style="margin-top:18px">
+    <div class="label">Quais questões</div>
+    <div class="seg" id="whichSeg">
+      <button data-v="all" aria-pressed="${TOPT.which==='all'}">Todas</button>
+      <button data-v="new" aria-pressed="${TOPT.which==='new'}" ${fresh.length?'':'disabled'}>Não feitas (${fresh.length})</button>
+      <button data-v="wrong" aria-pressed="${TOPT.which==='wrong'}" ${wrong.length?'':'disabled'}>Errei (${wrong.length})</button>
+    </div>
+    <div class="label">Quantidade</div>
+    <div class="seg" id="cntSeg">${[10,20,0].map(c=>`<button data-v="${c}" aria-pressed="${TOPT.count===c}">${c||'Todas'}</button>`).join('')}</div>
+    <div class="label">Formato</div>
+    <div class="seg" id="modeSeg"><button data-v="treino" aria-pressed="${TOPT.mode==='treino'}">Treino</button><button data-v="prova" aria-pressed="${TOPT.mode==='prova'}">Prova</button></div>
+    <p class="hint" style="margin:-4px 0 0">${TOPT.mode==='treino'?'Você vê a correção e o comentário logo após cada questão.':'Cronômetro ligado e correção só no final. Só questões objetivas.'}</p>
+    <button class="btn primary block" id="go" ${n?'':'disabled'}>${I.play}Começar ${n} ${n===1?'questão':'questões'}</button>
+  </section>`;
+  const bind=(id,key,cv)=>app.querySelectorAll('#'+id+' button').forEach(b=>b.onclick=()=>{if(b.disabled)return;TOPT[key]=cv(b.dataset.v);renderTopic(tid);});
+  bind('whichSeg','which',x=>x); bind('cntSeg','count',x=>+x); bind('modeSeg','mode',x=>x);
+  document.getElementById('go').onclick=()=>{let list=shuffle(srcMode);if(TOPT.count)list=list.slice(0,TOPT.count);start(list,{mode:TOPT.mode,title:t.n});};
+}
+
+/* ============ Provas (disciplines) ============ */
+function renderDisc(){
+  app.innerHTML=`<section class="sec" style="margin-top:8px"><div class="sec-h"><h2>Provas por disciplina</h2></div>
+  <p class="hint" style="margin:-6px 0 0">Toque num semestre para refazer a prova original, na ordem em que foi aplicada.</p>
+  <div class="dgrid">${DORDER.map(d=>{
+    const l=Q.filter(q=>q.d===d), st=statsOf(l);
+    const ex=Object.keys(EXAMS).filter(k=>k.startsWith(d+'|')).sort();
+    const cnt={}; l.forEach(q=>cnt[q.t]=(cnt[q.t]||0)+1);
+    const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,5), mx=top.length?top[0][1]:1;
+    return `<div class="card dcard">
+      <div><h3>${esc(DISC[d].n)}</h3><div class="hint">${esc(DISC[d].full)} · ${l.length} questões · ${st.done} feitas</div></div>
+      ${bar(st)}
+      <div class="exams">${ex.map(k=>{const [dd,s]=k.split('|');const el=EXAMS[k],es=statsOf(el);return `<button class="exam" data-exam="${k}">${isMapes(dd)?'Caderno':s}<small class="num">${es.done?es.done+'/':''}${el.length} q</small></button>`}).join('')}</div>
+      <div class="inc"><span class="label" style="font-size:13.5px">Temas que mais caem</span>${top.map(([t,n])=>`<div class="inc-row"><span>${esc(TOP[t].n)}</span><span class="b"><i style="width:${n/mx*100}%"></i></span><span class="num muted">${n}</span></div>`).join('')}</div>
+      <button class="btn" data-dtrain="${d}">Montar simulado de ${esc(DISC[d].n)}</button>
+    </div>`}).join('')}</div></section>`;
+  app.querySelectorAll('[data-exam]').forEach(b=>b.onclick=()=>{const k=b.dataset.exam,[d,s]=k.split('|');start(EXAMS[k].slice(),{title:isMapes(d)?DISC[d].n+' · MAPES':`${DISC[d].n} ${s}`,original:true});});
+  app.querySelectorAll('[data-dtrain]').forEach(b=>b.onclick=()=>{F.d=new Set([b.dataset.dtrain]);F.t=new Set(Object.keys(TOP));NAV={tab:'build',view:'home'};render();window.scrollTo(0,0);toast(DISC[b.dataset.dtrain].n+' selecionada');});
+}
+
+/* ============ Simulado builder ============ */
+function pool(){
+  return Q.filter(q=>F.d.has(q.d)&&F.t.has(q.t)&&(isMapes(q.d)||(q.sem>=F.s0&&q.sem<=F.s1))&&(F.kind==='all'||q.k===F.kind)&&(!F.ofc||q.g==='oficial')&&(F.mode!=='prova'||q.k==='mc')&&!q.dup
+    &&(F.status==='all'||(F.status==='new'&&!hist(q))||(F.status==='wrong'&&hist(q)&&hist(q).last===false)));
+}
+const chip=(attr,val,on,label,n)=>`<button class="chip" ${attr}="${val}" aria-pressed="${on}"><span class="ck">${I.check}</span>${esc(label)}${n!=null?` <span class="n num">${n}</span>`:''}</button>`;
+function renderBuild(){
+  const p=pool(), n=F.count&&F.count<p.length?F.count:p.length, allT=F.t.size===Object.keys(TOP).length;
+  const openState=[...app.querySelectorAll('details.grp')].map(d=>d.open);
+  app.innerHTML=`<section class="sec" style="margin-top:8px"><div class="sec-h"><h2>Montar simulado</h2><button class="linkbtn" id="resetF">Limpar filtros</button></div>
+  <div class="card pane">
+    <div class="sec-h"><span class="label">Disciplinas</span><button class="linkbtn" id="dAll">${F.d.size===DORDER.length?'Nenhuma':'Todas'}</button></div>
+    <div class="chips">${DORDER.map(d=>chip('data-d',d,F.d.has(d),DISC[d].n)).join('')}</div>
+  </div>
+  <div class="card pane">
+    <div class="sec-h"><span class="label">Temas <span class="hint">· ${allT?'todos':F.t.size+' de '+Object.keys(TOP).length}</span></span><button class="linkbtn" id="tAll">${allT?'Nenhum':'Todos'}</button></div>
+    <div>${AREAS.map((a,i)=>{const on=a.t.filter(t=>F.t.has(t.id)).length;return `<details class="grp" ${openState[i]?'open':''}><summary><span class="t">${esc(a.n)}</span><span class="c"><span class="num">${on}/${a.t.length}</span>${I.down}</span></summary>
+      <div class="chips"><button class="linkbtn" data-area="${a.id}" style="width:100%;text-align:left;padding:2px 0 4px">${on===a.t.length?'Desmarcar área':'Marcar área inteira'}</button>${a.t.filter(t=>byTopic[t.id]).map(t=>chip('data-t',t.id,F.t.has(t.id),t.n,byTopic[t.id].length)).join('')}</div></details>`}).join('')}</div>
+  </div>
+  <div class="card pane">
+    <span class="label">Semestres das provas</span>
+    <div class="selrow"><select id="s0" aria-label="De">${SEMS.map(s=>`<option ${s===F.s0?'selected':''}>${s}</option>`).join('')}</select><span class="muted">até</span><select id="s1" aria-label="Até">${SEMS.map(s=>`<option ${s===F.s1?'selected':''}>${s}</option>`).join('')}</select></div>
+    <span class="label">Tipo de questão</span>
+    <div class="seg" id="kindSeg">${[['all','Todas'],['mc','Objetivas'],['open','Abertas']].map(([k,l])=>`<button data-v="${k}" aria-pressed="${F.kind===k}">${l}</button>`).join('')}</div>
+    <span class="label">Situação</span>
+    <div class="seg" id="statSeg">${[['all','Todas'],['new','Não feitas'],['wrong','Errei']].map(([k,l])=>`<button data-v="${k}" aria-pressed="${F.status===k}">${l}</button>`).join('')}</div>
+    <span class="label">Quantidade</span>
+    <div class="seg" id="countSeg">${[10,20,40,0].map(c=>`<button data-v="${c}" aria-pressed="${F.count===c}">${c||'Todas'}</button>`).join('')}</div>
+    <span class="label">Formato</span>
+    <div class="seg" id="modeSeg"><button data-v="treino" aria-pressed="${F.mode==='treino'}">Treino</button><button data-v="prova" aria-pressed="${F.mode==='prova'}">Prova</button></div>
+    <p class="hint" style="margin:-4px 0 0">${F.mode==='treino'?'Correção e comentário depois de cada questão.':'Cronômetro e correção só no final. Só questões objetivas.'}</p>
+    <button class="toggle" id="tOfc" role="switch" aria-checked="${F.ofc}"><span class="tx"><b>Só gabarito oficial</b><span class="hint">Tira as 50 questões da Integradora 2021.1, resolvidas por mim.</span></span><span class="sw"></span></button>
+    <button class="toggle" id="tJust" role="switch" aria-checked="${F.just}"><span class="tx"><b>Justificar antes de responder</b><span class="hint">Você escreve o porquê e compara com o comentário.</span></span><span class="sw"></span></button>
+  </div>
+  </section>
+  <div class="dock"><div class="wrap"><div class="inner"><div class="cnt"><b class="num">${p.length}</b><div class="hint">questões disponíveis</div></div><button class="btn primary" id="go" ${p.length?'':'disabled'}>${I.play}Começar ${n}</button></div></div></div>
+  <div style="height:90px"></div>`;
+  const re=()=>{const y=scrollY;renderBuild();scrollTo(0,y);};
+  app.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{const d=b.dataset.d;F.d.has(d)?F.d.delete(d):F.d.add(d);re();});
+  app.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{const t=b.dataset.t;F.t.has(t)?F.t.delete(t):F.t.add(t);re();});
+  app.querySelectorAll('[data-area]').forEach(b=>b.onclick=()=>{const a=AREAS.find(x=>x.id===b.dataset.area),all=a.t.every(t=>F.t.has(t.id));a.t.forEach(t=>all?F.t.delete(t.id):F.t.add(t.id));re();});
+  document.getElementById('dAll').onclick=()=>{F.d=F.d.size===DORDER.length?new Set():new Set(DORDER);re();};
+  document.getElementById('tAll').onclick=()=>{F.t=allT?new Set():new Set(Object.keys(TOP));re();};
+  document.getElementById('resetF').onclick=()=>{Object.assign(F,{d:new Set(DORDER),t:new Set(Object.keys(TOP)),s0:SEMS[0],s1:SEMS[SEMS.length-1],kind:'all',ofc:false,status:'all',count:20,mode:'treino',just:false});re();toast('Filtros limpos');};
+  document.getElementById('s0').onchange=e=>{F.s0=e.target.value;if(F.s0>F.s1)F.s1=F.s0;re();};
+  document.getElementById('s1').onchange=e=>{F.s1=e.target.value;if(F.s1<F.s0)F.s0=F.s1;re();};
+  [['kindSeg','kind',x=>x],['statSeg','status',x=>x],['countSeg','count',x=>+x],['modeSeg','mode',x=>x]].forEach(([id,k,cv])=>app.querySelectorAll('#'+id+' button').forEach(b=>b.onclick=()=>{F[k]=cv(b.dataset.v);re();}));
+  document.getElementById('tOfc').onclick=()=>{F.ofc=!F.ofc;re();};
+  document.getElementById('tJust').onclick=()=>{F.just=!F.just;re();};
+  document.getElementById('go').onclick=()=>{let l=shuffle(pool());if(F.count)l=l.slice(0,F.count);start(l,{mode:F.mode,just:F.just,title:'Simulado'});};
+}
+
+/* ============ Quiz ============ */
+const fmt=ms=>{const s=Math.floor(ms/1000);return(s>=3600?Math.floor(s/3600)+':':'')+pad(Math.floor(s/60)%60)+':'+pad(s%60)};
+function start(list,opt={}){
+  if(!list.length){toast('Nenhuma questão com esses filtros');return;}
+  S={list,i:0,mode:opt.mode||'treino',just:!!opt.just,title:opt.title||'Simulado',original:!!opt.original,ans:{},cut:{},jt:{},done:{},self:{},t0:Date.now(),end:null};
+  render(); window.scrollTo(0,0);
+}
+const isDone=q=>S.mode==='treino'&&S.done[q.id];
+function resultOf(q){if(q.k==='open')return S.self[q.id];if(!S.ans[q.id])return undefined;return S.ans[q.id]===q.a;}
+function renderQ(){
+  setTabs(false); document.getElementById('appbar').hidden=true;
+  const q=S.list[S.i], n=S.list.length, revealed=isDone(q), chosen=S.ans[q.id], cut=S.cut[q.id]||{};
+  const prog=(S.mode==='prova'?Object.keys(S.ans).length:Object.keys(S.done).length)/n*100;
+  const timed=S.mode==='prova'||S.original;
+  app.innerHTML=`
+  <div class="qtop"><div class="row">
+    <button class="iconbtn" id="quit" aria-label="Sair">${I.x}</button>
+    <div class="qprog"><i style="width:${prog}%"></i></div>
+    <span class="qcount num">${S.i+1}/${n}</span>${timed?`<span class="timer num" id="clock">${fmt(Date.now()-S.t0)}</span>`:''}
+  </div>
+  ${n>1&&n<=80?`<div class="dots" id="dots">${S.list.map((x,k)=>{let c='';const r=S.done[x.id]&&S.mode==='treino'?resultOf(x):undefined;if(r===true)c='ok';else if(r===false)c='bad';else if(S.ans[x.id]||S.done[x.id])c='ans';return `<button data-k="${k}" class="${c} ${k===S.i?'cur':''}" aria-label="Questão ${k+1}">${k+1}</button>`}).join('')}</div>`:''}
+  </div>
+  <article class="card qcard">
+    <div class="qtags"><span class="qt d">${esc(qLabel(q))} · Q${q.n}</span><span class="qt">${esc(TOP[q.t].n)}</span>${q.m?`<span class="qt">Módulo ${esc(q.m)}</span>`:''}${q.k==='open'?'<span class="qt open">Resposta aberta</span>':''}${q.g==='sugerido'?'<span class="qt sug">Gabarito sugerido</span>':''}${q.rep?`<span class="qt">Também caiu: ${q.rep.map(id=>esc(qLabel(BYID[id]))).join(', ')}</span>`:''}</div>
+    <p class="stem">${stemHTML(q.s)}</p>
+    ${imgsHTML(q.i)}
+    ${q.k==='mc'?mcHTML(q,chosen,cut,revealed):openHTML(q,revealed)}
+    ${revealed?feedbackHTML(q):''}
+  </article>
+  <div style="height:96px"></div>
+  <div class="qbar"><div class="wrap">
+    <button class="btn" id="prev" ${S.i===0?'disabled':''} aria-label="Anterior">${I.back}</button>
+    ${actionBtn(q,chosen,revealed)}
+  </div></div>`;
+  bindQ(q,revealed);
+  const cur=document.querySelector('.dots .cur'); if(cur) cur.scrollIntoView({inline:'center',block:'nearest'});
+  if(timed) timerId=setInterval(()=>{const c=document.getElementById('clock');if(c)c.textContent=fmt(Date.now()-S.t0);},1000);
+}
+const imgsHTML=l=>!l||!l.length?'':`<div class="imgs ${l.length>1?'two':''}">${l.map(f=>`<button class="film" data-img="${esc(f)}" aria-label="Ampliar imagem"><img src="${imgSrc(f)}" alt="Imagem da questão" loading="lazy"><span class="zoom">${I.zoom}Ampliar</span></button>`).join('')}</div>`;
+function mcHTML(q,chosen,cut,revealed){
+  return `<div class="opts" role="radiogroup">${q.o.map(([k,t])=>{
+    let cls='opt',badge='';
+    if(revealed){if(k===q.a){cls+=' right';badge='Correta';} else if(k===chosen){cls+=' wrong';badge='Sua resposta';} else if(cut[k]) cls+=' out';}
+    else{if(k===chosen){cls+=' sel';badge='Selecionada';} if(cut[k]) cls+=' out';}
+    return `<div class="${cls}" role="radio" aria-checked="${k===chosen}" tabindex="${revealed?-1:0}" data-k="${k}" ${revealed?'aria-disabled="true"':''}>
+      ${badge?`<span class="badge">${badge}</span>`:''}<span class="k">${k.toUpperCase()}</span><span class="tx">${esc(t)}</span>
+      ${revealed?'<span></span>':`<button class="cut" data-cut="${k}">${cut[k]?'Desfazer':'Riscar'}</button>`}</div>`}).join('')}</div>
+    ${S.just&&!revealed&&S.mode==='treino'?`<label class="label" for="jtx">Por que essa alternativa?</label><textarea id="jtx" placeholder="Mínimo de 20 caracteres">${esc(S.jt[q.id]||'')}</textarea>`:''}`;
+}
+const openHTML=(q,revealed)=>revealed?'':`<label class="label" for="jtx">Sua resposta</label><textarea id="jtx" placeholder="Escreva ou só pense na resposta e toque em Ver resposta">${esc(S.jt[q.id]||'')}</textarea>`;
+function actionBtn(q,chosen,revealed){
+  const last=S.i===S.list.length-1;
+  if(S.mode==='prova') return `<button class="btn primary" id="next">${last?'Entregar prova':'Próxima'}</button>`;
+  if(revealed){ if(q.k==='open'&&S.self[q.id]===undefined) return `<span class="note">Marque se acertou ↑</span>`; return `<button class="btn primary" id="next">${last?'Ver resultado':'Próxima'}</button>`; }
+  if(q.k==='open') return `<button class="btn primary" id="confirm">Ver resposta</button>`;
+  const jok=!S.just||(S.jt[q.id]||'').trim().length>=20;
+  return `<button class="btn primary" id="confirm" ${chosen&&jok?'':'disabled'}>${chosen?'Confirmar resposta':'Escolha uma alternativa'}</button>`;
+}
+function feedbackHTML(q){
+  const refs=q.f?`<p class="ref">Referência: ${esc(q.f)}</p>`:'';
+  const sug=q.g==='sugerido'?`<p class="warn">Prova sem gabarito oficial: resposta e explicação elaboradas por mim, podem divergir da banca.</p>`:'';
+  const ci=q.ci&&q.ci.length?imgsHTML(q.ci):'';
+  if(q.k==='open'){const sg=S.self[q.id];
+    return `<div class="fb neu"><h3>Resposta esperada</h3>
+      ${S.jt[q.id]?`<p class="mine">Você: ${esc(S.jt[q.id])}</p>`:''}${q.r?`<p class="expect">${esc(q.r)}</p>`:''}
+      ${q.c?`<p class="com"><b>Comentário:</b> ${esc(q.c)}</p>`:''}${ci}${sug}${refs}
+      <div class="label">Como foi?</div>
+      <div class="seg"><button data-self="1" aria-pressed="${sg===true}">Acertei</button><button data-self="0" aria-pressed="${sg===false}">Errei</button></div></div>`;}
+  const ok=S.ans[q.id]===q.a;
+  return `<div class="fb ${ok?'ok':'bad'}"><h3>${ok?I.check+'Acertou!':I.x+'Resposta correta: '+q.a.toUpperCase()}</h3>
+    ${S.jt[q.id]?`<p class="mine">Sua justificativa: ${esc(S.jt[q.id])}</p>`:''}
+    ${q.c?`<p class="com"><b>${q.g==='sugerido'?'Explicação':'Comentário'}:</b> ${esc(q.c)}</p>`:'<p class="hint">Esta prova não traz comentário da resposta.</p>'}${ci}${sug}${refs}</div>`;
+}
+function keep(fn){const y=scrollY;fn();scrollTo(0,y);}
+function bindQ(q,revealed){
+  app.querySelectorAll('.film').forEach(b=>b.onclick=()=>openViewer(b.dataset.img,q));
+  if(q.k==='mc'&&!revealed){
+    app.querySelectorAll('.opt').forEach(el=>{el.onclick=e=>{if(e.target.closest('.cut'))return;choose(q,el.dataset.k);};el.onkeydown=e=>{if((e.key===' '||e.key==='Enter')&&e.target===el){e.preventDefault();choose(q,el.dataset.k);}};});
+    app.querySelectorAll('.cut').forEach(b=>b.onclick=e=>{e.stopPropagation();const k=b.dataset.cut;S.cut[q.id]=S.cut[q.id]||{};S.cut[q.id][k]=!S.cut[q.id][k];if(S.cut[q.id][k]&&S.ans[q.id]===k)delete S.ans[q.id];keep(renderQ);});
+  }
+  const jt=document.getElementById('jtx');
+  if(jt) jt.oninput=()=>{S.jt[q.id]=jt.value;const c=document.getElementById('confirm');if(c&&q.k==='mc'){const ok=S.ans[q.id]&&(!S.just||jt.value.trim().length>=20);c.disabled=!ok;}};
+  const c=document.getElementById('confirm'); if(c) c.onclick=()=>confirmQ(q);
+  const nx=document.getElementById('next'); if(nx) nx.onclick=next;
+  document.getElementById('prev').onclick=()=>{if(S.i>0){S.i--;render();scrollTo(0,0);}};
+  document.getElementById('quit').onclick=askQuit;
+  app.querySelectorAll('.dots button').forEach(b=>b.onclick=()=>{S.i=+b.dataset.k;render();scrollTo(0,0);});
+  app.querySelectorAll('[data-self]').forEach(b=>b.onclick=()=>{S.self[q.id]=b.dataset.self==='1';record(q,S.self[q.id]);keep(renderQ);});
+}
+function choose(q,k){
+  if(isDone(q))return;
+  if(S.cut[q.id]&&S.cut[q.id][k])S.cut[q.id][k]=false;
+  S.ans[q.id]=k; const had=!!document.getElementById('jtx');
+  keep(renderQ);
+  if(had){const n=document.getElementById('jtx');if(n)n.focus({preventScroll:true});}
+}
+function record(q,ok){const h=store.h[q.id]||{c:0,e:0};ok?h.c++:h.e++;h.last=ok;store.h[q.id]=h;save();}
+function confirmQ(q){
+  if(q.k==='mc'){if(!S.ans[q.id])return;S.done[q.id]=true;record(q,S.ans[q.id]===q.a);} else S.done[q.id]=true;
+  keep(renderQ);
+  const fb=app.querySelector('.fb'); if(fb) setTimeout(()=>fb.scrollIntoView({block:'start',behavior:'smooth'}),50);
+}
+function next(){if(S.i<S.list.length-1){S.i++;render();scrollTo(0,0);}else finish();}
+function askQuit(){
+  const answered=Object.keys(S.mode==='prova'?S.ans:S.done).length;
+  sheet(`<h3>${S.mode==='prova'?'Entregar a prova?':'Encerrar o treino?'}</h3><p class="muted" style="margin:0">Você respondeu ${answered} de ${S.list.length}. ${S.mode==='prova'?'As não respondidas contam como erradas.':'Vamos mostrar o resultado do que você fez.'}</p>
+   <button class="btn primary block" id="shOk">${S.mode==='prova'?'Entregar e ver resultado':'Encerrar e ver resultado'}</button>
+   <button class="btn block" id="shExit">Sair sem ver resultado</button><button class="btn ghost block" id="shNo">Continuar respondendo</button>`,
+   {shOk:()=>finish(),shExit:()=>{clearInterval(timerId);S=null;render();scrollTo(0,0);},shNo:()=>{}});
+}
+function sheet(html,handlers){
+  const root=document.getElementById('sheetRoot');
+  root.innerHTML=`<div class="sheet-bg" id="shBg"><div class="sheet" role="dialog" aria-modal="true">${html}</div></div>`;
+  const close=()=>root.innerHTML='';
+  document.getElementById('shBg').onclick=e=>{if(e.target.id==='shBg')close();};
+  Object.entries(handlers).forEach(([id,fn])=>{const el=document.getElementById(id);if(el)el.onclick=()=>{close();fn();};});
+}
+function finish(){
+  clearInterval(timerId);
+  if(S.mode==='prova') S.list.forEach(q=>{if(S.ans[q.id]){S.done[q.id]=true;record(q,S.ans[q.id]===q.a);}});
+  S.end=Date.now(); render(); scrollTo(0,0);
+}
+
+/* ============ Results ============ */
+function renderResult(){
+  setTabs(false); document.getElementById('appbar').hidden=false; appbar();
+  const graded=S.list.filter(q=>S.done[q.id]&&resultOf(q)!==undefined);
+  const total=S.mode==='prova'?S.list.length:graded.length, ok=graded.filter(q=>resultOf(q)===true).length;
+  const pct=total?Math.round(ok/total*100):0;
+  const by={}; (S.mode==='prova'?S.list:graded).forEach(q=>{by[q.t]=by[q.t]||{n:0,g:0};by[q.t].n++;if(resultOf(q)===true)by[q.t].g++;});
+  const C=2*Math.PI*48, col=pct>=70?'var(--ok)':pct>=50?'var(--acc)':'var(--bad)';
+  const verdict=!total?'Nenhuma questão corrigida.':pct>=80?'Excelente, esse conteúdo está firme.':pct>=60?'Bom caminho. Revise os temas em vermelho.':'Volte à teoria nos temas abaixo e refaça os erros.';
+  const wrongs=S.list.filter(q=>S.done[q.id]&&resultOf(q)===false);
+  app.innerHTML=`
+  <section class="card score" style="margin-top:8px">
+    <svg class="ring" viewBox="0 0 110 110" role="img" aria-label="${pct}% de acerto"><circle cx="55" cy="55" r="48" fill="none" stroke="var(--surface2)" stroke-width="10"/>${pct?`<circle cx="55" cy="55" r="48" fill="none" stroke="${col}" stroke-width="10" stroke-linecap="round" stroke-dasharray="${C*pct/100} ${C}" transform="rotate(-90 55 55)"/>`:''}<text x="55" y="63" text-anchor="middle" fill="var(--fg)" font-family="Bricolage Grotesque, system-ui" font-weight="800" font-size="25">${pct}%</text></svg>
+    <div><div class="hint">${esc(S.title)} · ${S.mode==='prova'?'Prova':'Treino'}${(S.mode==='prova'||S.original)?' · '+fmt(S.end-S.t0):''}</div><h1 class="num">${ok} de ${total} certas</h1><p class="muted" style="margin:4px 0 0">${verdict}</p></div>
+  </section>
+  <div class="btns" style="margin-top:12px">${wrongs.length?`<button class="btn primary" id="redo">Refazer as ${wrongs.length} que errei</button>`:''}<button class="btn" id="home">Voltar ao início</button></div>
+  <section class="sec"><h2>Por tema</h2><div class="card pane" style="gap:0">${Object.entries(by).sort((a,b)=>a[1].g/a[1].n-b[1].g/b[1].n).map(([t,v])=>{const p=Math.round(v.g/v.n*100),c=p>=70?'var(--ok)':p>=50?'var(--acc)':'var(--bad)';return `<div class="tline"><span>${esc(TOP[t].n)}</span><span class="b"><i style="width:${p}%;background:${c}"></i></span><span class="num muted" style="text-align:right">${v.g}/${v.n}</span></div>`}).join('')||'<p class="hint">Nada corrigido.</p>'}</div></section>
+  <section class="sec"><h2>Revisão</h2><div class="card">${S.list.filter(q=>S.mode==='prova'||S.done[q.id]).map(q=>{const r=resultOf(q),c=r===true?'var(--ok)':r===false?'var(--bad)':'var(--faint)';
+    return `<details class="ritem"><summary><span class="st" style="background:${c}"></span><span class="sm">${esc(qLabel(q))} · Q${q.n} · ${esc(q.s.slice(0,70))}</span><span class="rk">${q.k==='mc'?(S.ans[q.id]?S.ans[q.id].toUpperCase():'—')+' → '+q.a.toUpperCase():'aberta'}</span></summary>
+    <div class="body"><p class="stem" style="font-size:15.5px">${stemHTML(q.s)}</p>${imgsHTML(q.i)}
+    ${q.k==='mc'?q.o.map(([k,t])=>`<p style="${k===q.a?'color:var(--ok);font-weight:700':k===S.ans[q.id]?'color:var(--bad);text-decoration:line-through':'color:var(--muted)'}">${k.toUpperCase()}) ${esc(t)}</p>`).join(''):(q.r?`<p style="color:var(--ok);font-weight:600">Resposta: ${esc(q.r)}</p>`:'')}
+    ${S.jt[q.id]?`<p style="border-left:3px solid var(--acc);padding-left:10px;color:var(--muted);font-style:italic">Você: ${esc(S.jt[q.id])}</p>`:''}
+    ${q.c?`<p style="white-space:pre-line"><b>Comentário:</b> ${esc(q.c)}</p>`:''}${q.g==='sugerido'?'<p style="color:var(--sug);font-size:13.5px;font-weight:600">Gabarito sugerido (não oficial).</p>':''}</div></details>`}).join('')}</div></section>
+  <div style="height:40px"></div>`;
+  app.querySelectorAll('.film').forEach(b=>b.onclick=()=>openViewer(b.dataset.img,null));
+  document.getElementById('home').onclick=()=>{S=null;render();scrollTo(0,0);};
+  const rd=document.getElementById('redo'); if(rd) rd.onclick=()=>start(shuffle(wrongs),{title:'Revisão de erros'});
+}
+
+/* ============ Viewer ============ */
+const V={el:document.getElementById('viewer'),stage:document.getElementById('vstage'),img:document.getElementById('vimg'),z:1,x:0,y:0,b:100,c:100,inv:false,base:1};
+function openViewer(f,q){V.img.src=imgSrc(f);document.getElementById('vlabel').textContent=q?qLabel(q)+' · Q'+q.n:'Imagem';V.el.hidden=false;document.body.style.overflow='hidden';
+  const fit=()=>{const r=V.stage.getBoundingClientRect();V.base=Math.min(r.width/V.img.naturalWidth,r.height/V.img.naturalHeight)*.96;resetV();};
+  if(V.img.complete&&V.img.naturalWidth)fit();else V.img.onload=fit;}
+function resetV(){V.z=1;V.x=0;V.y=0;V.b=100;V.c=100;V.inv=false;document.getElementById('vbright').value=100;document.getElementById('vcont').value=100;applyV();}
+function applyV(){const s=V.base*V.z;V.img.style.width=V.img.naturalWidth+'px';V.img.style.transform=`translate(calc(-50% + ${V.x}px), calc(-50% + ${V.y}px)) scale(${s})`;V.img.style.filter=`brightness(${V.b}%) contrast(${V.c}%)${V.inv?' invert(1)':''}`;}
+function zoomBy(f){V.z=Math.min(8,Math.max(1,V.z*f));if(V.z===1){V.x=0;V.y=0;}applyV();}
+function closeV(){V.el.hidden=true;document.body.style.overflow='';}
+document.getElementById('vclose').onclick=closeV;
+document.getElementById('vzin').onclick=()=>zoomBy(1.4);
+document.getElementById('vzout').onclick=()=>zoomBy(1/1.4);
+document.getElementById('vreset').onclick=resetV;
+document.getElementById('vinv').onclick=()=>{V.inv=!V.inv;applyV();};
+document.getElementById('vbright').oninput=e=>{V.b=+e.target.value;applyV();};
+document.getElementById('vcont').oninput=e=>{V.c=+e.target.value;applyV();};
+V.stage.addEventListener('wheel',e=>{e.preventDefault();zoomBy(e.deltaY<0?1.15:1/1.15);},{passive:false});
+V.stage.addEventListener('dblclick',()=>zoomBy(V.z>1?.01:2.5));
+const ptrs=new Map();let pinch0=null;
+V.stage.addEventListener('pointerdown',e=>{V.stage.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});if(ptrs.size===2){const[a,b]=[...ptrs.values()];pinch0={d:Math.hypot(a.x-b.x,a.y-b.y),z:V.z};}});
+V.stage.addEventListener('pointermove',e=>{if(!ptrs.has(e.pointerId))return;const p=ptrs.get(e.pointerId);if(ptrs.size===2&&pinch0){ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});const[a,b]=[...ptrs.values()];V.z=Math.min(8,Math.max(1,pinch0.z*Math.hypot(a.x-b.x,a.y-b.y)/pinch0.d));applyV();return;}V.x+=e.clientX-p.x;V.y+=e.clientY-p.y;ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});applyV();});
+['pointerup','pointercancel'].forEach(t=>V.stage.addEventListener(t,e=>{ptrs.delete(e.pointerId);if(ptrs.size<2)pinch0=null;}));
+
+/* ============ keys ============ */
+document.addEventListener('keydown',e=>{
+  if(!V.el.hidden){if(e.key==='Escape')closeV();return;}
+  if(!S||S.end||/TEXTAREA|SELECT|INPUT/.test(e.target.tagName))return;
+  const q=S.list[S.i],k=e.key.toLowerCase();
+  if(q.k==='mc'&&'abcde'.includes(k)&&k.length===1&&q.o.some(o=>o[0]===k))choose(q,k);
+  else if(e.key==='Enter'){const c=document.getElementById('confirm');if(c&&!c.disabled){e.preventDefault();c.click();}else{const n=document.getElementById('next');if(n&&S.mode==='treino'){e.preventDefault();n.click();}}}
+  else if(e.key==='ArrowRight'){const n=document.getElementById('next');if(n)n.click();}
+  else if(e.key==='ArrowLeft'){const p=document.getElementById('prev');if(p&&!p.disabled)p.click();}
+});
+matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',()=>{if(!theme)render();});
+render();
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
+</script>
+</body>
+</html>
