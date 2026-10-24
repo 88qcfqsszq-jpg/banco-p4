@@ -1,6 +1,6 @@
 // Service worker: guarda o app no aparelho para funcionar offline.
 // Ao atualizar questões, mude o VERSION para os aparelhos baixarem a versão nova.
-const VERSION = 'exatamente-v3';
+const VERSION = 'exatamente-v4';
 const FILES = ['./','index.html','manifest.webmanifest','icon-192.png','icon-512.png','apple-touch-icon.png','dados.js'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
