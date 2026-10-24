@@ -1,7 +1,7 @@
 // Service worker: guarda o app no aparelho para funcionar offline.
 // Ao atualizar questões, mude o VERSION para os aparelhos baixarem a versão nova.
-const VERSION = 'banco-p4-v1';
-const FILES = ['./','index.html','manifest.webmanifest','icon-192.png','icon-512.png','apple-touch-icon.png'];
+const VERSION = 'exatamente-v3';
+const FILES = ['./','index.html','manifest.webmanifest','icon-192.png','icon-512.png','apple-touch-icon.png','dados.js'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
 });
@@ -13,7 +13,7 @@ self.addEventListener('fetch', e => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   // página e dados: tenta a rede primeiro (pega atualizações), cai no cache se offline
-  if (url.origin === location.origin && (req.mode === 'navigate' || url.pathname.endsWith('index.html'))) {
+  if (url.origin === location.origin && (req.mode === 'navigate' || (url.pathname.endsWith('index.html')||url.pathname.endsWith('dados.js')))) {
     e.respondWith(fetch(req).then(r => { const cp = r.clone(); caches.open(VERSION).then(c => c.put(req, cp)); return r; }).catch(() => caches.match(req).then(r => r || caches.match('index.html'))));
     return;
   }
