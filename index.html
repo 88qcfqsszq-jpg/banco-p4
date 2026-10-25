@@ -77,7 +77,7 @@ main.wrap{padding-block:12px 64px}
 .backbtn svg{width:20px;height:20px}
 
 /* bottom tab bar */
-.tabbar .wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding-bottom:10px}
+.tabbar .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding-bottom:10px}
 .tabbar button{display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px;border-radius:12px;background:var(--surface2);color:var(--muted);font-weight:700;font-size:14.5px;border:1.5px solid transparent}
 .tabbar button svg{width:20px;height:20px}
 .tabbar button[aria-current="page"]{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
@@ -259,6 +259,15 @@ textarea{width:100%;min-height:100px;resize:vertical;background:var(--surface);c
 .fb .mine{border-left:3px solid var(--acc);padding-left:10px;color:var(--muted);font-style:italic;white-space:pre-line}
 .fb .expect{border-left:3px solid var(--ok);padding-left:10px;white-space:pre-line;font-weight:600}
 .fb .ref{font-size:12.5px;color:var(--faint)}
+.xl{display:grid;gap:8px;margin:2px 0}
+.xl .lbl{font-size:12.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.xi{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:15px;line-height:1.5}
+.xi .xk{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--surface2);color:var(--muted)}
+.xi.right{border-color:var(--ok);background:var(--ok-soft)}.xi.right .xk{background:var(--ok);color:#fff}
+.xi.wrong{border-color:var(--bad)}.xi.wrong .xk{background:var(--bad);color:#fff}
+.xi .xt b{font-weight:700}
+.fb details.bc summary{cursor:pointer;font-weight:700;font-size:14.5px;color:var(--muted);padding:4px 0}
+.fb details.bc[open] summary{margin-bottom:6px}
 .fb .warn{font-size:13.5px;color:var(--sug);font-weight:600}
 .qbar{display:flex;gap:10px;align-items:center;margin-top:14px}
 .qbar .btn.primary{flex:1}
@@ -303,12 +312,14 @@ textarea{width:100%;min-height:100px;resize:vertical;background:var(--surface);c
 @media (max-width:380px){.statrow .stat b{font-size:20px}.imgs.two{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
+<link rel="stylesheet" href="pathmed/pathmed.css">
 </head>
 <body>
 <header class="appbar" id="appbar"><div class="wrap" id="appbarIn"></div><nav class="tabbar" id="tabbar" aria-label="Navegação"><div class="wrap">
   <button data-nav="temas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="7" height="7" rx="2"/><rect x="14" y="4" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>Temas</button>
   <button data-nav="disc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/><path d="M9 8h6"/></svg>Provas</button>
   <button data-nav="build"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M4 12h7M4 18h10"/><circle cx="18" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>Simulado</button>
+  <button data-nav="pathmed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 21h12"/><path d="M8 18h8"/><path d="M14 18a5 5 0 0 0 4-8"/><path d="M9 3l4 2-3 6-4-2z"/><path d="M8 11l-1 2 2 1"/></svg>PATHMED</button>
 </div></nav></header>
 <main class="wrap" id="app"></main>
 
@@ -332,14 +343,14 @@ textarea{width:100%;min-height:100px;resize:vertical;background:var(--surface);c
 const DATA = window.DATA, IMG = window.IMG || {};
 const Q = DATA.q, BYID = Object.fromEntries(Q.map(q=>[q.id,q])), AREAS = DATA.areas;
 const TOP = {}; AREAS.forEach(a=>a.t.forEach(t=>{TOP[t.id]={n:t.n,a:a.id,an:a.n}}));
-const DISC = {HAM:{n:'HAM IV',full:'Habilidades e Atitudes Médicas IV'},SOI:{n:'SOI IV',full:'Sistemas Orgânicos Integrados IV'},IESC:{n:'IESC IV',full:'Integração Ensino-Serviço-Comunidade IV'},INT:{n:'Integradora',full:'Avaliação Integradora do 4º período'},RAD:{n:'Radiologia',full:'MAPES · Laboratório de Imagem'},FARM:{n:'Farmacologia',full:'MAPES · Laboratório de Farmacologia'}};
-const DORDER = ['HAM','SOI','IESC','INT','RAD','FARM'];
-const isMapes = d => d==='RAD'||d==='FARM';
+const DISC = {HAM:{n:'HAM IV',full:'Habilidades e Atitudes Médicas IV'},SOI:{n:'SOI IV',full:'Sistemas Orgânicos Integrados IV'},IESC:{n:'IESC IV',full:'Integração Ensino-Serviço-Comunidade IV'},INT:{n:'Integradora',full:'Avaliação Integradora do 4º período'},RAD:{n:'Radiologia',full:'MAPES · Laboratório de Imagem'},FARM:{n:'Farmacologia',full:'MAPES · Laboratório de Farmacologia'},ANAT:{n:'Anatomopatologia',full:'MAPES · Laboratório de Anatomopatologia'}};
+const DORDER = ['HAM','SOI','IESC','INT','RAD','FARM','ANAT'];
+const isMapes = d => d==='RAD'||d==='FARM'||d==='ANAT';
 const EXAMS = {}; Q.forEach(q=>{(EXAMS[q.d+'|'+q.sem]=EXAMS[q.d+'|'+q.sem]||[]).push(q)}); Object.values(EXAMS).forEach(l=>l.sort((a,b)=>a.n-b.n));
 const SEMS = [...new Set(Q.filter(q=>!isMapes(q.d)).map(q=>q.sem))].sort();
 const ACOL={gastro:{c:'#f2b233',i:'🫃'},nefro:{c:'#4f9cf0',i:'🫘'},ped:{c:'#38c28c',i:'👶'},mulher:{c:'#ec6fa6',i:'🤰'},aps:{c:'#26b3c2',i:'🏘️'},geri:{c:'#9b7bea',i:'👴'},outros:{c:'#8a97a6',i:'🧪'}};
 const CLOSED=new Set();
-const DCOL={HAM:{c:'#4f9cf0',i:'🩺'},SOI:{c:'#f2b233',i:'🧬'},IESC:{c:'#26b3c2',i:'🏘️'},INT:{c:'#9b7bea',i:'🧩'},RAD:{c:'#7d8fa8',i:'🩻'},FARM:{c:'#38c28c',i:'💊'}};
+const DCOL={HAM:{c:'#4f9cf0',i:'🩺'},SOI:{c:'#f2b233',i:'🧬'},IESC:{c:'#26b3c2',i:'🏘️'},INT:{c:'#9b7bea',i:'🧩'},RAD:{c:'#7d8fa8',i:'🩻'},FARM:{c:'#38c28c',i:'💊'},ANAT:{c:'#e0679b',i:'🔬'}};
 const byTopic = {}; Q.forEach(q=>(byTopic[q.t]=byTopic[q.t]||[]).push(q));
 
 /* ============ storage ============ */
@@ -361,7 +372,7 @@ const bar=s=>`<span class="bar"><i class="g" style="width:${s.n?s.g/s.n*100:0}%"
 const wrongList=()=>Q.filter(q=>hist(q)&&hist(q).last===false);
 const qLabel=q=>isMapes(q.d)?`${DISC[q.d].n} · MAPES`:`${DISC[q.d].n} ${q.sem}`;
 const examsCount=l=>new Set(l.filter(q=>!isMapes(q.d)).map(q=>q.d+q.sem)).size;
-const imgSrc=f=>IMG[f]||('img/'+f);
+const imgSrc=f=>IMG[f]||(String(f).startsWith('http')?f:'img/'+f);
 const I={
   chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
   back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>',
@@ -409,6 +420,7 @@ function setTabs(show){
   tabbar.querySelectorAll('[data-nav]').forEach(b=>b.setAttribute('aria-current',b.dataset.nav===NAV.tab?'page':'false'));
 }
 function render(){
+  if(NAV.tab==='pathmed'&&NAV.view==='home'&&!S){PATHMED.begin();return;}
   clearInterval(timerId);
   if(S&&!S.end){renderQ();return;}
   if(S&&S.end){renderResult();return;}
@@ -638,7 +650,13 @@ function feedbackHTML(q){
   const ok=S.ans[q.id]===q.a;
   return `<div class="fb ${ok?'ok':'bad'}"><h3>${ok?I.check+'Acertou!':I.x+'Resposta correta: '+q.a.toUpperCase()}</h3>
     ${S.jt[q.id]?`<p class="mine">Sua justificativa: ${esc(S.jt[q.id])}</p>`:''}
-    ${q.c?`<p class="com"><b>${q.g==='sugerido'?'Explicação':'Comentário'}:</b> ${esc(q.c)}</p>`:'<p class="hint">Esta prova não traz comentário da resposta.</p>'}${ci}${sug}${refs}</div>`;
+    ${xHTML(q,S.ans[q.id])}
+    ${q.c?(q.x?`<details class="bc"><summary>${q.g==='sugerido'?'Explicação completa':'Comentário original da prova'}</summary><p class="com">${esc(q.c)}</p></details>`:`<p class="com"><b>${q.g==='sugerido'?'Explicação':'Comentário'}:</b> ${esc(q.c)}</p>`):(q.x?'':'<p class="hint">Esta prova não traz comentário da resposta.</p>')}${ci}${sug}${refs}</div>`;
+}
+function xHTML(q,mine){
+  if(!q.x||!q.o) return '';
+  return `<div class="xl"><div class="lbl">Alternativa por alternativa</div>${q.o.filter(([k])=>q.x[k]).map(([k])=>{const r=k===q.a,m=k===mine&&!r;
+    return `<div class="xi ${r?'right':m?'wrong':''}"><span class="xk">${k.toUpperCase()}</span><span class="xt">${r?'<b>Por que está certa: </b>':m?'<b>Sua escolha. Por que não: </b>':''}${esc(q.x[k].replace(/^Correta(, pela banca)?:\s*/,''))}</span></div>`}).join('')}</div>`;
 }
 function keep(fn){const y=scrollY;fn();scrollTo(0,y);}
 function bindQ(q,revealed){
@@ -713,7 +731,7 @@ function renderResult(){
     <div class="body"><p class="stem" style="font-size:15.5px">${stemHTML(q.s)}</p>${imgsHTML(q.i)}
     ${q.k==='mc'?q.o.map(([k,t])=>`<p style="${k===q.a?'color:var(--ok);font-weight:700':k===S.ans[q.id]?'color:var(--bad);text-decoration:line-through':'color:var(--muted)'}">${k.toUpperCase()}) ${esc(t)}</p>`).join(''):(q.r?`<p style="color:var(--ok);font-weight:600">Resposta: ${esc(q.r)}</p>`:'')}
     ${S.jt[q.id]?`<p style="border-left:3px solid var(--acc);padding-left:10px;color:var(--muted);font-style:italic">Você: ${esc(S.jt[q.id])}</p>`:''}
-    ${q.c?`<p style="white-space:pre-line"><b>Comentário:</b> ${esc(q.c)}</p>`:''}${q.g==='sugerido'?'<p style="color:var(--sug);font-size:13.5px;font-weight:600">Gabarito sugerido (não oficial).</p>':''}</div></details>`}).join('')}</div></section>
+    ${q.x?`<div class="fb neu" style="padding:12px">${xHTML(q,S.ans[q.id])}</div>`:(q.c?`<p style="white-space:pre-line"><b>Comentário:</b> ${esc(q.c)}</p>`:'')}${q.g==='sugerido'?'<p style="color:var(--sug);font-size:13.5px;font-weight:600">Gabarito sugerido (não oficial).</p>':''}</div></details>`}).join('')}</div></section>
   <div style="height:40px"></div>`;
   app.querySelectorAll('.film').forEach(b=>b.onclick=()=>openViewer(b.dataset.img,null));
   document.getElementById('home').onclick=()=>{S=null;render();scrollTo(0,0);};
@@ -754,8 +772,12 @@ document.addEventListener('keydown',e=>{
   else if(e.key==='ArrowLeft'){const p=document.getElementById('prev');if(p&&!p.disabled)p.click();}
 });
 matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',()=>{if(!theme)render();});
+window.PATHMED_RETURN=()=>{NAV={tab:'temas',view:'home'};render();};
 render();
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
 </script>
+<script src="pathmed/missoes.js"></script>
+<script src="pathmed/casos.js"></script>
+<script src="pathmed/pathmed.js"></script>
 </body>
 </html>
