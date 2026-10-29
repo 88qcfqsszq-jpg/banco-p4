@@ -1,0 +1,9 @@
+// Deploy automático no Cloudflare (Workers Builds).
+// Cada push na branch main publica o site em exatamente.88qcfqsszq.workers.dev
+{
+  "name": "exatamente",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "."
+  }
+}

@@ -234,3 +234,37 @@
 .pm-metric-d .pm-bands{margin:6px 0 0}
 .pm-fonte{margin:2px 4px 0;font-size:12.5px}
 .pm-evi.open .pm-fig{margin:8px 0}
+.pm-tv{display:block}
+
+/* ---------- várias áreas: abas, ligações, exame, laudo ---------- */
+.pm-areatabs{margin-top:2px}
+.pm-areatabs small{font-weight:600;opacity:.7;margin-left:3px}
+.pm-areatag{font-size:11.5px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;padding:4px 8px;border-radius:6px;flex:none;align-self:center}
+.pm-areatag.a-anat{background:var(--pm-soft);color:var(--pm)}
+.pm-areatag.a-img{background:rgba(125,143,168,.18);color:#5d7290}
+.pm-areatag.a-lab{background:rgba(56,194,140,.15);color:#1f9d6b}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .pm-areatag.a-img{color:#a9bbd3}:root:not([data-theme="light"]) .pm-areatag.a-lab{color:#3ccf95}}
+:root[data-theme="dark"] .pm-areatag.a-img{color:#a9bbd3}:root[data-theme="dark"] .pm-areatag.a-lab{color:#3ccf95}
+.pm-links{padding:14px;display:grid;gap:6px}
+.pm-linkrow{display:flex;gap:12px;align-items:center;text-align:left;padding:10px;border-radius:10px;background:var(--surface2);width:100%}
+.pm-linkrow span:last-child{display:grid;gap:1px}
+.pm-linkrow small{color:var(--muted);font-size:12.5px}
+.pm-scen{background:var(--surface2);border-radius:12px;padding:12px 14px}
+.pm-scen small{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.pm-scen .pm-q{margin-top:4px}
+.pm-sctrack{margin:-4px 0 0}
+.pm-laudo{border:1.5px solid var(--line2);border-radius:12px;overflow:hidden;background:var(--surface)}
+.pm-lhead{padding:10px 12px;background:var(--surface2);font-size:14px;line-height:1.45}
+.pm-lrow{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:4px 8px;align-items:baseline;padding:10px 12px;border-top:1px solid var(--line);text-align:left;width:100%;font-size:14.5px;line-height:1.35}
+.pm-lth{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);border-top:0}
+.pm-lval{font-weight:700;font-variant-numeric:tabular-nums}
+.pm-lref{color:var(--muted);font-size:13px}
+.pm-lnote{grid-column:1/-1;font-style:normal;font-size:13.5px;line-height:1.5;color:var(--fg);margin-top:2px}
+button.pm-lrow{cursor:pointer}
+.pm-lrow.on{background:var(--acc-soft);box-shadow:inset 4px 0 0 var(--acc)}
+.pm-lrow.hit{background:var(--ok-soft);box-shadow:inset 4px 0 0 var(--ok)}
+.pm-lrow.miss{background:var(--bad-soft);box-shadow:inset 4px 0 0 var(--bad)}
+.pm-lrow.wrong{background:var(--surface2);box-shadow:inset 4px 0 0 var(--bad)}
+.pm-areatabs button{flex:1 1 0;padding:0 8px;min-width:0}
+.pm-case .pm-laudo{margin:10px 0 14px}
+.pm-masterq .pm-laudo{margin:8px 0}

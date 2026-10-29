@@ -1,6 +1,6 @@
 // Exatamente + PATHMED V10
 // Offline não é prioridade; o cache serve apenas como tolerância a falhas e aceleração.
-const VERSION='exatamente-v10b-pathmed';
+const VERSION='exatamente-v14-pathmed';
 const CORE=['./','index.html','manifest.webmanifest','exatamente-192.png','exatamente-512.png','exatamente-apple.png','pathmed/missoes.js','pathmed/casos.js','pathmed/pathmed.js','pathmed/pathmed.css'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(VERSION).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==VERSION).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});

@@ -325,4 +325,4 @@ window.PM_MISSOES = [
   ]
 }
 ];
-window.PM_PROXIMAS = ['Intestino delgado e doença inflamatória intestinal','Parasitoses intestinais','Pólipos e câncer colorretal','Fígado e hepatites','Vesícula, pâncreas e apêndice','Glomérulo e rim','Mama e endométrio'];
+window.PM_PROXIMAS = [];

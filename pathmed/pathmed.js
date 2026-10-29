@@ -11,6 +11,8 @@
     texto: "Leitura",
     abas: "Compare",
     explorar: "Explore a lâmina",
+    exame: "Qual exame pedir?",
+    laudo: "Interprete o laudo",
     sequencia: "Passo a passo",
     tabela: "Quadro da apostila",
     checar: "Confira",
@@ -24,6 +26,17 @@
       diferencial: "Diagnóstico diferencial",
       clinica: "Aplicação clínica",
     };
+  // Áreas: cada missão tem area = 'anat' (padrão), 'img' ou 'lab'. O motor é o mesmo; mudam rótulos e cor.
+  const AREAS = {
+    anat: { nome: "Anatomopatologia", curto: "Anatomo", lab: "Laboratório de lâminas", desc: "Teoria da apostila, lâminas para explorar, comparações e perguntas de conferência.", expl: "Explore a lâmina", mic: "MICROSCOPIA", micH: "Lâmina sem marcações", micCap: "Amplie e examine antes de responder.", aval: "Lâmina para avaliação", invDesc: "evidências, hipótese, microscopia, diferencial, decisão e debriefing" },
+    img: { nome: "Imagem", curto: "Imagem", lab: "Laboratório de imagem", desc: "Teoria da apostila, exames de imagem para explorar, escolha do exame certo e perguntas de conferência.", expl: "Explore a imagem", mic: "LEITURA DA IMAGEM", micH: "Exame sem marcações", micCap: "Amplie e examine antes de responder.", aval: "Imagem para avaliação", invDesc: "evidências, hipótese, leitura da imagem, diferencial, decisão e debriefing" },
+    lab: { nome: "Laboratório", curto: "Laboratório", lab: "Laboratório de exames", desc: "Teoria da apostila, laudos para interpretar, quadros e perguntas de conferência.", expl: "Explore a figura", mic: "RESULTADOS", micH: "Laudo do paciente", micCap: "", aval: "Figura para avaliação", invDesc: "evidências, hipótese, leitura do laudo, diferencial, decisão e debriefing" },
+  };
+  const areaOf = (m) => (m && AREAS[m.area] ? m.area : "anat");
+  const AR = () => AREAS[areaOf(M)];
+  const tipo = (t) => (t === "explorar" ? AR().expl : TIPO[t]);
+  let curArea = "anat";
+  try { curArea = localStorage.getItem("pathmed-area") || "anat"; } catch (e) {}
   let active = false,
     view = "mapa",
     M = null,
@@ -170,6 +183,7 @@
   function openHub(id) {
     M = MS().find((m) => m.id === id);
     if (!M) return;
+    curArea = areaOf(M);
     view = "hub";
     ui = {};
     draw();
@@ -372,9 +386,14 @@
     const awards = Object.values(db.awards || {}).sort((a, b) => (b.at || 0) - (a.at || 0));
     const nextLvl = level() * 150;
     return `<div class="pm-shell">
-  <header class="pm-hero pm-hero-v10"><div class="pm-kicker">Anatomopatologia · estudo guiado</div><h1>PATHMED</h1><p><b>Aprender → investigar → demonstrar domínio.</b> “Estudo” mostra o que você já percorreu. “Domínio” só muda com respostas de primeira tentativa no caso e na avaliação.</p>
+  <header class="pm-hero pm-hero-v10"><div class="pm-kicker">Estudo guiado · Anatomopatologia, Imagem e Laboratório</div><h1>PATHMED</h1><p><b>Aprender → investigar → demonstrar domínio.</b> “Estudo” mostra o que você já percorreu. “Domínio” só muda com respostas de primeira tentativa no caso e na avaliação.</p>
   <div class="pm-profile"><span>Nível <b>${level()}</b></span><span><b>${db.xp || 0}</b> / ${nextLvl} XP</span><span><b>${Object.keys(db.awards || {}).length}</b> conquistas</span></div></header>
+  <div class="pm-tabs pm-areatabs" role="tablist">${Object.entries(AREAS)
+    .filter(([k]) => MS().some((m) => areaOf(m) === k))
+    .map(([k, a]) => `<button role="tab" data-area="${k}" aria-selected="${k === curArea}">${h(a.curto)} <small>${MS().filter((m) => areaOf(m) === k).length}</small></button>`)
+    .join("")}</div>
   <div class="pm-missions">${MS()
+    .filter((m) => areaOf(m) === curArea)
     .map((m) => {
       const p = studyProgress(m),
         d = domainSummary(m.id),
@@ -403,6 +422,14 @@
   }
   function bindMap() {
     root.querySelectorAll("[data-m]").forEach((b) => (b.onclick = () => openHub(b.dataset.m)));
+    root.querySelectorAll("[data-area]").forEach(
+      (b) =>
+        (b.onclick = () => {
+          curArea = b.dataset.area;
+          try { localStorage.setItem("pathmed-area", curArea); } catch (e) {}
+          draw();
+        }),
+    );
   }
 
   function hubHTML() {
@@ -422,19 +449,32 @@
           .join("")}</details>`
       : "";
     return `<div class="pm-shell">
-  <header class="pm-missionhero"><div class="pm-kicker">Missão ${h(M.num)} · apostila p. ${h(M.pags)}</div><h1>${h(M.titulo)}</h1><p>${h(M.sub)}</p></header>
+  <header class="pm-missionhero"><div class="pm-kicker">${h(AR().nome)} · Missão ${h(M.num)} · apostila p. ${h(M.pags)}</div><h1>${h(M.titulo)}</h1><p>${h(M.sub)}</p></header>
   <section class="pm-two-metrics">${metricBar("Estudo", p, "do laboratório explorado")}<div class="pm-metric pm-metric-d"><div><b>Domínio demonstrado</b><span>${h(d.text)}</span></div><strong>${d.evaluated ? d.shown + "/" + d.total : "—"}</strong>${bandDots(M.id)}</div></section>
   <section class="card pm-recommend"><small>PRÓXIMO PASSO SUGERIDO</small><h3>${h(rec.title)}</h3><p>${h(rec.text)}</p><button class="btn primary" id="pmRec">Ir</button></section>
   <div class="pm-pathgrid">
-    <button class="card pm-path" id="pmLearn"><span class="pm-pathicon">${IC.book}</span><span><small>1 · APRENDER</small><b>Laboratório</b><p>Teoria da apostila, lâminas para explorar, comparações e perguntas de conferência. Errar aqui não conta.</p><em>${p}% estudado</em></span></button>
-    <button class="card pm-path" id="pmInv"><span class="pm-pathicon">${IC.flask}</span><span><small>2 · INVESTIGAR</small><b>Caso clínico</b><p>Um caso da prova em 7 etapas: evidências, hipótese, microscopia, diferencial, decisão e debriefing.</p><em>${inProg ? "Em andamento · etapa " + (s.investigation.current.stage + 1) + " de 7" : runs.length ? runs.length + " concluída(s)" : "Ainda não feita"}</em></span></button>
+    <button class="card pm-path" id="pmLearn"><span class="pm-pathicon">${IC.book}</span><span><small>1 · APRENDER</small><b>${h(AR().lab)}</b><p>${h(AR().desc)} Errar aqui não conta.</p><em>${p}% estudado</em></span></button>
+    <button class="card pm-path" id="pmInv"><span class="pm-pathicon">${IC.flask}</span><span><small>2 · INVESTIGAR</small><b>Caso clínico</b><p>Um caso da prova em 7 etapas: ${h(AR().invDesc)}.</p><em>${inProg ? "Em andamento · etapa " + (s.investigation.current.stage + 1) + " de 7" : runs.length ? runs.length + " concluída(s)" : "Ainda não feita"}</em></span></button>
     <button class="card pm-path" id="pmMaster"><span class="pm-pathicon">${IC.target}</span><span><small>3 · DEMONSTRAR</small><b>Avaliação</b><p>6 questões sem pistas e sem gabarito antes do envio. A primeira tentativa fica registrada.</p><em>${s.mastery.first ? "Primeira tentativa: " + s.mastery.first.results.filter((x) => x.correct).length + " de " + s.mastery.first.results.length : "Ainda não feita"}</em></span></button>
   </div>
   <section class="card pm-comp"><div class="pm-sectiontitle">Competências</div>${compRows(M.id)}<p class="pm-note">Faixas calculadas só com primeiras respostas. Com menos de ${MIN_OBS} respostas, a competência fica como <b>evidência insuficiente</b>. “Demonstrado” = ${Math.round(OK_RATIO * 100)}% ou mais de acerto, e acerto com pista vale menos. É uma regra fixa, não uma medida validada.</p></section>
+  ${linksHTML(M)}
   ${runList}
   </div>`;
   }
+  // mesmo tema nas outras áreas
+  function linksHTML(m) {
+    const ls = (m.ligados || []).map((id) => MS().find((x) => x.id === id)).filter(Boolean);
+    if (!ls.length) return "";
+    return `<section class="card pm-links"><div class="pm-sectiontitle">O mesmo tema nas outras áreas</div>${ls
+      .map((x) => `<button class="pm-linkrow" data-link="${x.id}"><span class="pm-areatag a-${areaOf(x)}">${h(AREAS[areaOf(x)].curto)}</span><span><b>${h(x.titulo)}</b><small>Missão ${h(x.num)}</small></span></button>`)
+      .join("")}</section>`;
+  }
+  function bindLinks() {
+    root.querySelectorAll("[data-link]").forEach((b) => (b.onclick = () => openHub(b.dataset.link)));
+  }
   function bindHub() {
+    bindLinks();
     document.getElementById("pmLearn").onclick = () => openLearn(M.id);
     document.getElementById("pmInv").onclick = () => openInvestigation(M.id);
     document.getElementById("pmMaster").onclick = () => openMastery(M.id);
@@ -473,7 +513,7 @@
       n = M.etapas.length,
       s = learnState();
     const list = showList
-      ? `<nav class="card pm-steps" aria-label="Etapas">${M.etapas.map((x, i) => `<button data-go="${i}" class="${i === step ? "cur" : ""}"><span class="pm-sdot ${s.seen.includes(i) ? "seen" : ""}">${s.seen.includes(i) && i !== step ? IC.check : i + 1}</span><span><small>${h(TIPO[x.t])}</small>${h(x.titulo)}</span></button>`).join("")}</nav>`
+      ? `<nav class="card pm-steps" aria-label="Etapas">${M.etapas.map((x, i) => `<button data-go="${i}" class="${i === step ? "cur" : ""}"><span class="pm-sdot ${s.seen.includes(i) ? "seen" : ""}">${s.seen.includes(i) && i !== step ? IC.check : i + 1}</span><span><small>${h(tipo(x.t))}</small>${h(x.titulo)}</span></button>`).join("")}</nav>`
       : "";
     const dots = `<div class="pm-track">${M.etapas.map((x, i) => `<i class="${i < step ? "past" : i === step ? "cur" : ""}"></i>`).join("")}</div>`;
     let body = "";
@@ -484,7 +524,9 @@
     else if (e.t === "tabela") body = tabelaHTML(e);
     else if (e.t === "checar") body = checarHTML(e);
     else if (e.t === "resumo") body = resumoHTML(e);
-    return `<div class="pm-shell"><div class="pm-learn-tools"><button class="pm-stepsbtn" id="pmList">${IC.list}<span>${step + 1}/${n}</span></button><span class="sp"></span><small>Estudo ${studyProgress(M)}%</small></div>${list}<div class="pm-mhead"><span class="pm-kicker">Missão ${h(M.num)} · ${h(M.titulo)}</span>${dots}</div><article class="card pm-step pm-t-${e.t}"><div class="pm-type"><span>${h(TIPO[e.t])}</span>${e.p ? `<span class="pm-src">${IC.book}Apostila p. ${h(e.p)}</span>` : ""}</div><h2>${h(e.titulo)}</h2>${body}</article><div class="pm-nav"><button class="btn" id="pmPrev" ${step === 0 ? "disabled" : ""}>Anterior</button>${step === n - 1 ? `<button class="btn primary" id="pmDone">Voltar ao painel da missão</button>` : `<button class="btn primary" id="pmNext">Continuar</button>`}</div></div>`;
+    else if (e.t === "exame") body = exameHTML(e);
+    else if (e.t === "laudo") body = laudoHTML(e);
+    return `<div class="pm-shell"><div class="pm-learn-tools"><button class="pm-stepsbtn" id="pmList">${IC.list}<span>${step + 1}/${n}</span></button><span class="sp"></span><small>Estudo ${studyProgress(M)}%</small></div>${list}<div class="pm-mhead"><span class="pm-kicker">Missão ${h(M.num)} · ${h(M.titulo)}</span>${dots}</div><article class="card pm-step pm-t-${e.t}"><div class="pm-type"><span>${h(tipo(e.t))}</span>${e.p ? `<span class="pm-src">${IC.book}Apostila p. ${h(e.p)}</span>` : ""}</div><h2>${h(e.titulo)}</h2>${body}</article><div class="pm-nav"><button class="btn" id="pmPrev" ${step === 0 ? "disabled" : ""}>Anterior</button>${step === n - 1 ? `<button class="btn primary" id="pmDone">Voltar ao painel da missão</button>` : `<button class="btn primary" id="pmNext">Continuar</button>`}</div></div>`;
   }
   function textoHTML(e) {
     return `${e.img ? figHTML(e.img, e.leg) : ""}<div class="pm-prose">${e.corpo.map((p) => `<p>${md(p)}</p>`).join("")}</div>${e.destaque ? `<div class="pm-key">${md(e.destaque)}</div>` : ""}`;
@@ -526,12 +568,12 @@
   }
   function tabelaHTML(e) {
     const two = e.cols.length === 2;
-    return `<div class="pm-tab ${two ? "two" : "three"}">${two ? `<div class="pm-trow pm-thead">${e.cols.map((c, i) => `<span class="c${i}">${h(c)}</span>`).join("")}</div>` : ""}${e.linhas
+    return `${e.img ? figHTML(e.img, e.leg || "") : ""}<div class="pm-tab ${two ? "two" : "three"}">${two ? `<div class="pm-trow pm-thead">${e.cols.map((c, i) => `<span class="c${i}">${h(c)}</span>`).join("")}</div>` : ""}${e.linhas
       .map(
         (r) =>
           `<div class="pm-trow"><span class="pm-rl">${h(r[0])}</span>${r
             .slice(1)
-            .map((v, i) => `<span class="c${i}">${two ? "" : `<em>${h(e.cols[i])}</em>`}${md(v)}</span>`)
+            .map((v, i) => `<span class="c${i}">${two ? "" : `<em>${h(e.cols[i])}</em>`}<span class="pm-tv">${md(v)}</span></span>`)
             .join("")}</div>`,
       )
       .join("")}</div>${e.nota ? `<div class="pm-key">${md(e.nota)}</div>` : ""}`;
@@ -560,7 +602,54 @@
     const qs = (M.questoes || []).filter((id) => typeof BYID !== "undefined" && BYID[id]),
       complete = learnState().complete,
       pct = studyProgress(M);
-    return `<div class="pm-learn-done"><b>${complete ? "Laboratório de aprendizagem concluído" : "Resumo alcançado · " + pct + "% do laboratório explorado"}</b><p>${complete ? "Isso registra <b>estudo</b>, não domínio. Para demonstrar domínio, faça a investigação e a avaliação." : "Ainda há etapas não exploradas. O progresso só chega a 100% quando todas forem visitadas."}</p></div><ul class="pm-take">${e.itens.map((x) => `<li><span>${IC.check}</span><p>${md(x)}</p></li>`).join("")}</ul>${qs.length ? `<div class="pm-practice"><div><b>Banco do Exatamente</b><p>${qs.length} questões relacionadas podem ser usadas como treino adicional.</p></div><button class="btn block" id="pmPractice">Resolver ${qs.length} questões</button></div>` : ""}`;
+    return `<div class="pm-learn-done"><b>${complete ? "Laboratório de aprendizagem concluído" : "Resumo alcançado · " + pct + "% do laboratório explorado"}</b><p>${complete ? "Isso registra <b>estudo</b>, não domínio. Para demonstrar domínio, faça a investigação e a avaliação." : "Ainda há etapas não exploradas. O progresso só chega a 100% quando todas forem visitadas."}</p></div><ul class="pm-take">${e.itens.map((x) => `<li><span>${IC.check}</span><p>${md(x)}</p></li>`).join("")}</ul>${qs.length ? `<div class="pm-practice"><div><b>Banco do Exatamente</b><p>${qs.length} questões relacionadas podem ser usadas como treino adicional.</p></div><button class="btn block" id="pmPractice">Resolver ${qs.length} questões</button></div>` : ""}${linksHTML(M)}`;
+  }
+  /* Qual exame pedir? Vários cenários; para cada um, o aluno escolhe o exame e lê a justificativa. Pode tentar de novo. */
+  function exameHTML(e) {
+    const ci = ui.ci || 0,
+      c = e.cenarios[ci],
+      st = (ui.ex = ui.ex || {}),
+      tried = st[ci] || [],
+      solved = tried.includes(c.certa),
+      last = tried[tried.length - 1];
+    const ops = e.exames
+      .map((x, i) => {
+        const t = tried.includes(i),
+          cls = solved ? (i === c.certa ? "ok" : t ? "no" : "dim") : t ? "no" : "";
+        return `<button class="pm-op ${cls}" data-ex="${i}" ${solved || t ? "disabled" : ""}><b>${String.fromCharCode(65 + i)}</b><span>${h(x)}</span></button>`;
+      })
+      .join("");
+    const fb =
+      last == null
+        ? ""
+        : `<div class="pm-fb ${last === c.certa ? "ok" : "no"}"><b>${last === c.certa ? (tried.length > 1 ? "Isso, agora sim." : "Isso.") : "Não é o melhor exame aqui."}</b><p>${md(c.por[last] || "")}</p>${!solved ? `<p class="pm-again">Tente outra opção.</p>` : ""}</div>`;
+    const dots = e.cenarios.map((_, i) => `<i class="${i === ci ? "cur" : (st[i] || []).includes(e.cenarios[i].certa) ? "past" : ""}"></i>`).join("");
+    return `${e.intro ? `<p class="pm-intro">${md(e.intro)}</p>` : ""}<div class="pm-track pm-sctrack">${dots}</div><div class="pm-scen"><small>Cenário ${ci + 1} de ${e.cenarios.length}</small><p class="pm-q">${md(c.sit)}</p></div><div class="pm-ops">${ops}</div>${fb}${
+      solved && ci < e.cenarios.length - 1 ? `<button class="btn block" id="pmNextSc">Próximo cenário</button>` : ""
+    }${solved && ci === e.cenarios.length - 1 && e.regra ? `<div class="pm-key">${md(e.regra)}</div>` : ""}`;
+  }
+  /* Interprete o laudo: o aluno marca os valores alterados e confere. */
+  function laudoTable(e, mode) {
+    // mode: 'pick' (marcar), 'check' (mostrar acertos), 'show' (só leitura)
+    const sel = ui.sel || new Set();
+    return `<div class="pm-laudo">${e.paciente ? `<div class="pm-lhead">${md(e.paciente)}</div>` : ""}<div class="pm-lrow pm-lth"><span>Exame</span><span>Resultado</span><span>Referência</span></div>${e.linhas
+      .map((l, i) => {
+        const on = sel.has(i);
+        let cls = "";
+        if (mode === "check") cls = l.alt ? (on ? "hit" : "miss") : on ? "wrong" : "";
+        if (mode === "pick" && on) cls = "on";
+        const tag = mode === "check" ? (l.alt ? (on ? "✓ alterado" : "alterado: você não marcou") : on ? "normal: marcado sem precisar" : "") : "";
+        return `<${mode === "pick" ? "button" : "div"} class="pm-lrow ${cls}" ${mode === "pick" ? `data-lr="${i}" aria-pressed="${on}"` : ""}><span>${h(l.ex)}</span><span class="pm-lval">${h(l.val)}${(mode !== "pick" && l.seta) ? ` <b>${h(l.seta)}</b>` : ""}</span><span class="pm-lref">${h(l.ref)}</span>${mode === "check" && (tag || l.nota) ? `<em class="pm-lnote">${tag ? `<b>${h(tag)}.</b> ` : ""}${md(l.nota || "")}</em>` : ""}</${mode === "pick" ? "button" : "div"}>`;
+      })
+      .join("")}</div>`;
+  }
+  function laudoHTML(e) {
+    const done = !!ui.lchk;
+    return `${e.intro ? `<p class="pm-intro">${md(e.intro)}</p>` : ""}${laudoTable(e, done ? "check" : "pick")}${
+      done
+        ? `${e.conclusao ? `<div class="pm-key">${md(e.conclusao)}</div>` : ""}<button class="linkbtn" id="pmLagain">Refazer</button>`
+        : `<p class="pm-hintline">Toque nos resultados que você acha alterados${e.foco ? " " + h(e.foco) : ""}. Depois, confira.</p><button class="btn primary block" id="pmLchk">Conferir</button>`
+    }`;
   }
   function bindLearn() {
     const e = M.etapas[step];
@@ -666,6 +755,40 @@
     if (e.t === "resumo") {
       const p = document.getElementById("pmPractice");
       if (p) p.onclick = practice;
+      bindLinks();
+    }
+    if (e.t === "exame") {
+      root.querySelectorAll("[data-ex]").forEach(
+        (b) =>
+          (b.onclick = () => {
+            const ci = ui.ci || 0;
+            ui.ex = ui.ex || {};
+            ui.ex[ci] = [...(ui.ex[ci] || []), +b.dataset.ex];
+            const ls = learnState(),
+              k = step + "." + ci;
+            if (!ls.checks[k]) ls.checks[k] = { first: +b.dataset.ex, firstCorrect: +b.dataset.ex === e.cenarios[ci].certa, attempts: 0, hint: false, revealed: false };
+            ls.checks[k].attempts++;
+            save();
+            redrawLearn();
+          }),
+      );
+      const n = document.getElementById("pmNextSc");
+      if (n) n.onclick = () => { ui.ci = (ui.ci || 0) + 1; redrawLearn(); };
+    }
+    if (e.t === "laudo") {
+      ui.sel = ui.sel || new Set();
+      root.querySelectorAll("[data-lr]").forEach((b) => (b.onclick = () => { const i = +b.dataset.lr; ui.sel.has(i) ? ui.sel.delete(i) : ui.sel.add(i); redrawLearn(); }));
+      const c = document.getElementById("pmLchk");
+      if (c) c.onclick = () => {
+        ui.lchk = true;
+        const ls = learnState(), ok = e.linhas.every((l, i) => !!l.alt === ui.sel.has(i));
+        if (!ls.checks[step]) ls.checks[step] = { first: [...ui.sel], firstCorrect: ok, attempts: 0, hint: false, revealed: false };
+        ls.checks[step].attempts++;
+        save();
+        redrawLearn();
+      };
+      const a = document.getElementById("pmLagain");
+      if (a) a.onclick = () => { ui.lchk = false; ui.sel = new Set(); redrawLearn(); };
     }
   }
   function redrawLearn() {
@@ -719,7 +842,7 @@
   }
   function invCaseHTML(cfg) {
     const p = cfg.patient;
-    return `<section class="card pm-case"><small>ETAPA 1 · RECEBIMENTO DO CASO</small><h2>${h(p.age)} anos · ${h(p.sex)}</h2><h3>${h(p.complaint)}</h3><p>${h(p.history)}</p><div class="pm-rule">O diagnóstico está oculto. Você decide quais evidências abrir.</div><button class="btn primary block" id="invNext">Iniciar investigação</button></section>`;
+    return `<section class="card pm-case"><small>ETAPA 1 · RECEBIMENTO DO CASO</small><h2>${p.age ? `${h(p.age)} anos · ${h(p.sex)}` : "Paciente adulto"}</h2><h3>${h(p.complaint)}</h3><p>${h(p.history)}</p><div class="pm-rule">O diagnóstico está oculto. Você decide quais evidências abrir.</div><button class="btn primary block" id="invNext">Iniciar investigação</button></section>`;
   }
   function invEvidenceHTML(cfg, run) {
     return `<section class="card pm-case"><small>ETAPA 2 · COLETA DE EVIDÊNCIAS</small><h2>O que você quer investigar?</h2><p>Abra pelo menos duas fontes. Não precisa abrir todas: o debriefing comenta se a busca foi direcionada.</p><div class="pm-evidence">${cfg.evidence
@@ -744,7 +867,7 @@
     const q = cfg.microscopy,
       answered = run.micAnswer != null,
       hinted = run.hints.includes("mic");
-    return `<section class="card pm-case"><small>ETAPA 4 · MICROSCOPIA</small><h2>Lâmina sem marcações</h2>${figHTML(q.image, "Amplie e examine antes de responder.")}<p class="pm-q">${h(q.prompt)}</p><div class="pm-ops">${q.options.map((o, i) => `<button class="pm-op ${answered ? (i === q.correct ? "ok" : run.micAnswer === i ? "no" : "dim") : ""}" data-mic="${i}" ${answered ? "disabled" : ""}><b>${String.fromCharCode(65 + i)}</b><span>${h(o)}</span></button>`).join("")}</div>${
+    return `<section class="card pm-case"><small>ETAPA 4 · ${h(AR().mic)}</small><h2>${h(AR().micH)}</h2>${q.laudo ? laudoTable(q.laudo, "show") : figHTML(q.image, AR().micCap)}<p class="pm-q">${h(q.prompt)}</p><div class="pm-ops">${q.options.map((o, i) => `<button class="pm-op ${answered ? (i === q.correct ? "ok" : run.micAnswer === i ? "no" : "dim") : ""}" data-mic="${i}" ${answered ? "disabled" : ""}><b>${String.fromCharCode(65 + i)}</b><span>${h(o)}</span></button>`).join("")}</div>${
       !answered
         ? hinted
           ? `<p class="pm-tip pm-tipbox"><b>Pista:</b> ${md(q.hint)}</p>`
@@ -765,7 +888,7 @@
     const f = cfg.final;
     return `<section class="card pm-case"><small>ETAPA 6 · DECISÃO DIAGNÓSTICA</small><h2>${h(f.prompt)}</h2><div class="pm-ops">${f.options.map((o, i) => `<button class="pm-op ${run.finalAnswer === i ? "sel" : ""}" data-final="${i}"><b>${String.fromCharCode(65 + i)}</b><span>${h(o)}</span></button>`).join("")}</div><h3>${h(f.keyPrompt)}</h3><div class="pm-ops">${f.keyOptions.map((o, i) => `<button class="pm-op ${run.keyAnswer === i ? "sel" : ""}" data-key="${i}"><b>${String.fromCharCode(65 + i)}</b><span>${h(o)}</span></button>`).join("")}</div><div class="pm-rule">Sem pista nesta etapa. Você pode trocar a escolha até enviar; o que vale é o que for enviado.</div><button class="btn primary block" id="invFinish" ${run.finalAnswer == null || run.keyAnswer == null ? "disabled" : ""}>Enviar e abrir o debriefing</button></section>`;
   }
-  const STAGE_NAME = { mic: "Microscopia", diff0: "Diferencial 1", diff1: "Diferencial 2", diff2: "Diferencial 3", diff3: "Diferencial 4", final: "Diagnóstico final", key: "Achado-chave" };
+  const STAGE_NAME = { mic: "Etapa 4 (leitura)", diff0: "Diferencial 1", diff1: "Diferencial 2", diff2: "Diferencial 3", diff3: "Diferencial 4", final: "Diagnóstico final", key: "Achado-chave" };
   function invDebriefHTML(cfg, run) {
     const good = run.records.filter((x) => x.correct).length,
       total = run.records.length,
@@ -947,7 +1070,7 @@
       qs = CASES()[M.id].mastery;
     if (ui.result) return masteryResultHTML(ui.result, !!ui.resultIsFirst);
     if (!ui.retake && s.first) return masteryResultHTML(s.first, true);
-    return `<div class="pm-shell"><header class="pm-invhead"><div class="pm-kicker">3 · Demonstrar · Missão ${h(M.num)}</div><h1>${ui.retake && ms(M.id).mastery.first ? "Avaliação · treino" : "Avaliação"}</h1><p>${ui.retake && ms(M.id).mastery.first ? "Tentativa de treino: não altera seu domínio." : "Sem pistas e sem gabarito até o envio. A primeira tentativa é a que conta para domínio."}</p></header><div class="pm-masterlist">${qs.map((q, qi) => `<section class="card pm-masterq"><small>QUESTÃO ${qi + 1} · ${q.c.map((c) => h(CNAME()[c])).join(" + ")}</small>${q.image ? figHTML(q.image, "Lâmina para avaliação") : ""}<h3>${h(q.q)}</h3><div class="pm-ops">${q.ops.map((o, i) => `<label class="pm-radio"><input type="radio" name="mq${qi}" value="${i}" ${ui.answers[qi] === i ? "checked" : ""}><span><b>${String.fromCharCode(65 + i)}</b>${h(o)}</span></label>`).join("")}</div></section>`).join("")}</div><button class="btn primary block pm-submit" id="pmSubmitMaster" ${Object.keys(ui.answers).length < qs.length ? "disabled" : ""}>Enviar avaliação</button></div>`;
+    return `<div class="pm-shell"><header class="pm-invhead"><div class="pm-kicker">3 · Demonstrar · Missão ${h(M.num)}</div><h1>${ui.retake && ms(M.id).mastery.first ? "Avaliação · treino" : "Avaliação"}</h1><p>${ui.retake && ms(M.id).mastery.first ? "Tentativa de treino: não altera seu domínio." : "Sem pistas e sem gabarito até o envio. A primeira tentativa é a que conta para domínio."}</p></header><div class="pm-masterlist">${qs.map((q, qi) => `<section class="card pm-masterq"><small>QUESTÃO ${qi + 1} · ${q.c.map((c) => h(CNAME()[c])).join(" + ")}</small>${q.image ? figHTML(q.image, AR().aval) : ""}${q.laudo ? laudoTable(q.laudo, "show") : ""}<h3>${h(q.q)}</h3><div class="pm-ops">${q.ops.map((o, i) => `<label class="pm-radio"><input type="radio" name="mq${qi}" value="${i}" ${ui.answers[qi] === i ? "checked" : ""}><span><b>${String.fromCharCode(65 + i)}</b>${h(o)}</span></label>`).join("")}</div></section>`).join("")}</div><button class="btn primary block pm-submit" id="pmSubmitMaster" ${Object.keys(ui.answers).length < qs.length ? "disabled" : ""}>Enviar avaliação</button></div>`;
   }
   function masteryResultHTML(attempt, isFirst) {
     const qs = CASES()[M.id].mastery,
