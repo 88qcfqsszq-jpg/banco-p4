@@ -313,12 +313,14 @@ textarea{width:100%;min-height:100px;resize:vertical;background:var(--surface);c
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 <link rel="stylesheet" href="pathmed/pathmed.css">
+<link rel="stylesheet" href="pilulas/pilulas.css">
 </head>
 <body>
 <header class="appbar" id="appbar"><div class="wrap" id="appbarIn"></div><nav class="tabbar" id="tabbar" aria-label="Navegação"><div class="wrap">
   <button data-nav="temas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="7" height="7" rx="2"/><rect x="14" y="4" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>Temas</button>
   <button data-nav="disc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/><path d="M9 8h6"/></svg>Provas</button>
   <button data-nav="build"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M4 12h7M4 18h10"/><circle cx="18" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>Simulado</button>
+  <button data-nav="pilulas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 3.5a4.95 4.95 0 0 1 7 7l-7 7a4.95 4.95 0 0 1-7-7z"/><path d="M7 7l7 7"/></svg>Pílulas</button>
   <button data-nav="pathmed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 21h12"/><path d="M8 18h8"/><path d="M14 18a5 5 0 0 0 4-8"/><path d="M9 3l4 2-3 6-4-2z"/><path d="M8 11l-1 2 2 1"/></svg>PATHMED</button>
 </div></nav></header>
 <main class="wrap" id="app"></main>
@@ -425,6 +427,7 @@ function render(){
   if(S&&!S.end){renderQ();return;}
   if(S&&S.end){renderResult();return;}
   setTabs(true);
+  if(NAV.tab==='pilulas'){if(window.PILULAS){PILULAS.render();setHdr();}return;}
   if(NAV.view==='topic'){renderTopic(NAV.topic);return;}
   appbar();
   if(NAV.tab==='temas') renderTemas(); else if(NAV.tab==='disc') renderDisc(); else renderBuild();
@@ -779,6 +782,8 @@ if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.se
 <script src="pathmed/missoes.js"></script>
 <script src="pathmed/casos.js"></script>
 <script src="pathmed/pathmed.js"></script>
+<script src="pilulas/conteudo.js"></script>
+<script src="pilulas/pilulas.js"></script>
   <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "44f0dee34fc14e789098d289b6c82ee8"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
