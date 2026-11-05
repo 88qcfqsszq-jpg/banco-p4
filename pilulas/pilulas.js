@@ -10,13 +10,23 @@
 
   const md = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
   const paras = s => String(s).split('\n').map(l => `<p>${md(l)}</p>`).join('');
-  const num = i => String(i + 1).padStart(2, '0');
+  const num = p => p.extra ? '+' : String(p.n).padStart(2, '0');
   const byId = id => P.find(p => p.id === id);
-  const qsOf = p => (p.questoes || []).filter(id => BYID[id]).map(id => BYID[id]);
-  const provasOf = p => new Set(qsOf(p).map(q => q.sem)).size;
-  // ordem: mais cobradas primeiro (questões, depois provas), mantendo a ordem do arquivo no empate
-  const ORDER = P.map((p, i) => ({ p, i })).sort((a, b) => qsOf(b.p).length - qsOf(a.p).length || provasOf(b.p) - provasOf(a.p) || a.i - b.i).map(o => o.p);
+  // questões da pílula = IDs fixos + busca automática no banco (temas + palavras)
+  const QCACHE = {};
+  function qsOf(p) {
+    if (QCACHE[p.id]) return QCACHE[p.id];
+    const ids = new Set((p.questoes || []).filter(id => BYID[id]));
+    if (p.busca) {
+      const re = new RegExp(p.busca.re, 'i'), ts = new Set(p.busca.t);
+      Q.forEach(q => { if (ts.has(q.t) && re.test(q.s + ' ' + (q.o || []).map(o => o[1]).join(' ') + ' ' + (q.r || ''))) ids.add(q.id); });
+    }
+    return (QCACHE[p.id] = [...ids].map(id => BYID[id]));
+  }
+  const provasOf = p => new Set(qsOf(p).filter(q => !isMapes(q.d)).map(q => q.d + q.sem)).size;
+  const ORDER = P.slice().sort((a, b) => (a.n || 99) - (b.n || 99));
   const idx = p => ORDER.indexOf(p);
+  const MAIN = ORDER.filter(p => !p.extra), EXTRAS = ORDER.filter(p => p.extra);
 
   const IC = {
     pill: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 3.5a4.95 4.95 0 0 1 7 7l-7 7a4.95 4.95 0 0 1-7-7z"/><path d="M7 7l7 7"/></svg>',
@@ -63,34 +73,36 @@
   /* ---------- home ---------- */
   function home() {
     appbar();
-    const cur = P.filter(p => db.p[p.id] && db.p[p.id].curado).length;
+    const cur = MAIN.filter(p => db.p[p.id] && db.p[p.id].curado).length;
     const tomou = P.some(p => db.p[p.id]);
-    const next = ORDER.find(p => !(db.p[p.id] && db.p[p.id].curado)) || ORDER[0];
+    const next = MAIN.find(p => !(db.p[p.id] && db.p[p.id].curado)) || MAIN[0];
     app.innerHTML = `
     <section class="card pl-hero">
       <div class="pl-hero-t"><span class="pl-badge">SOI IV</span><h1>Pílulas para prova</h1>
-      <p class="muted">O que mais cai em SOI, em doses de 3 minutos. Tome, faça o teste relâmpago e saia curado.</p></div>
-      <div class="pl-meter"><div><b class="num">${cur}</b><span>/${P.length} curadas</span></div><span class="pl-mbar"><i style="width:${P.length ? cur / P.length * 100 : 0}%"></i></span></div>
+      <p class="muted">Os ${MAIN.length} assuntos de SOI IV em doses de 3 minutos. Tome, faça o teste relâmpago e saia curado.</p></div>
+      <div class="pl-meter"><div><b class="num">${cur}</b><span>/${MAIN.length} curadas</span></div><span class="pl-mbar"><i style="width:${MAIN.length ? cur / MAIN.length * 100 : 0}%"></i></span></div>
       <div class="btns">
-        <button class="btn primary" id="plNext">${IC.pill}${cur ? 'Próxima pílula' : 'Começar pela mais cobrada'}</button>
+        <button class="btn primary" id="plNext">${IC.pill}${cur ? 'Próxima pílula' : 'Começar pela pílula 01'}</button>
         ${tomou ? `<button class="btn" id="plRef">${IC.bolt}Dose de reforço · 5</button>` : ''}
       </div>
     </section>
     <section class="sec">
-      <div class="sec-h"><h2>As ${P.length} pílulas</h2><span class="hint">ordem: mais cobradas primeiro</span></div>
-      <div class="pl-list">
-      ${ORDER.map((p, i) => {
-        const s = db.p[p.id], n = qsOf(p).length, pv = provasOf(p);
-        const tag = s && s.curado ? `<span class="pl-tag ok">${IC.check}Curado</span>` : s ? '<span class="pl-tag">Tomada</span>' : '<span class="pl-tag new">Nova</span>';
-        return `<button class="card pl-item" data-pl="${p.id}">${capsule(p, num(i))}
-          <span class="pl-it"><b>${esc(p.titulo)}</b><span class="hint">${esc(p.sub)}</span>
-          <span class="pl-meta"><span class="num">Caiu ${n}× em ${pv} prova${pv > 1 ? 's' : ''}</span> · 3 min</span></span>${tag}</button>`;
-      }).join('')}
-      </div>
-    </section><div style="height:28px"></div>`;
+      <div class="sec-h"><h2>As ${MAIN.length} pílulas</h2></div>
+      <div class="pl-list">${MAIN.map(itemHTML).join('')}</div>
+    </section>
+    ${EXTRAS.length ? `<section class="sec"><div class="sec-h"><h2>Extras</h2><span class="hint">bônus de SOI</span></div><div class="pl-list">${EXTRAS.map(itemHTML).join('')}</div></section>` : ''}
+    <div style="height:28px"></div>`;
     app.querySelectorAll('[data-pl]').forEach(b => b.onclick = () => open(b.dataset.pl));
     document.getElementById('plNext').onclick = () => open(next.id);
     const r = document.getElementById('plRef'); if (r) r.onclick = () => open('_reforco');
+  }
+  function itemHTML(p) {
+    const s = db.p[p.id], n = qsOf(p).length, pv = provasOf(p);
+    const tag = s && s.curado ? `<span class="pl-tag ok">${IC.check}Curado</span>` : s ? '<span class="pl-tag">Tomada</span>' : '<span class="pl-tag new">Nova</span>';
+    const meta = n ? `<span class="num">${n} questões no banco${pv ? ` · ${pv} prova${pv > 1 ? 's' : ''}` : ''}</span> · 3 min` : '3 min';
+    return `<button class="card pl-item" data-pl="${p.id}">${capsule(p, num(p))}
+      <span class="pl-it"><b>${esc(p.titulo)}</b><span class="hint">${esc(p.sub)}</span>
+      <span class="pl-meta">${meta}</span></span>${tag}</button>`;
   }
 
   /* ---------- blocos de conteúdo ---------- */
@@ -124,8 +136,8 @@
     appbar({ back: 'Pílulas', onBack: goHome });
     const pi = p ? idx(p) : -1;
     const head = `<div class="pl-top" style="--c:${p ? p.cor : 'var(--acc)'}">
-      <div class="pl-kick">${p ? capsule(p, num(pi)) : `<span class="pl-cap" style="--c:var(--acc)"><i></i><b>${IC.bolt}</b></span>`}
-      <div><span class="hint">${p ? 'Pílula ' + num(pi) : 'Dose de reforço'}</span><b>${p ? esc(p.titulo) : '5 perguntas das pílulas que você já tomou'}</b></div></div>
+      <div class="pl-kick">${p ? capsule(p, num(p)) : `<span class="pl-cap" style="--c:var(--acc)"><i></i><b>${IC.bolt}</b></span>`}
+      <div><span class="hint">${p ? (p.extra ? 'Pílula extra' : 'Pílula ' + num(p)) : 'Dose de reforço'}</span><b>${p ? esc(p.titulo) : '5 perguntas das pílulas que você já tomou'}</b></div></div>
       <div class="pl-prog" aria-label="Etapa ${st.i + 1} de ${n}">${st.cards.map((_, i) => `<i class="${i < st.i ? 'd' : i === st.i ? 'c' : ''}"></i>`).join('')}</div></div>`;
     let body = '', canNext = true, nextLabel = 'Continuar';
 
@@ -185,7 +197,7 @@
       <div class="pl-bula"><span class="pl-lab">Bula · leve na cabeça</span><p>${md(p.bula)}</p></div>
       <div class="pl-acts">
         ${!cured ? `<button class="btn primary block" id="plRetry">${IC.bolt}Refazer o teste relâmpago</button>` : ''}
-        ${qn ? `<button class="btn ${cured ? 'primary' : ''} block" id="plPractice">Treinar com as ${qn} questões reais</button>` : ''}
+        ${qn ? `<button class="btn ${cured ? 'primary' : ''} block" id="plPractice">Treinar com as ${qn} questões do banco</button>` : ''}
         ${!cured ? `<button class="btn block" id="plRestart">Rever a pílula do início</button>` : ''}
         ${nxt ? `<button class="btn block" id="plGoNext">Próxima pílula: ${esc(nxt.titulo)}</button>` : ''}
         <button class="btn ghost block" id="plHome">Ver todas as pílulas</button>
@@ -195,7 +207,7 @@
     const rs = st.cards.filter(x => x.k === 'rel'), ok = rs.filter(x => st.rel[x.i] === x.r.a).length;
     const wrongP = [...new Set(rs.filter(x => st.rel[x.i] !== x.r.a).map(x => x.from))];
     return `<div class="pl-seal ${ok === rs.length ? '' : 'almost'}" style="--c:var(--ok)"><span class="num">${ok}/${rs.length}</span><b>${ok === rs.length ? 'Tudo firme' : 'Reforço feito'}</b><small>Dose de reforço</small></div>
-      ${wrongP.length ? `<span class="pl-lab">Vale tomar de novo</span><div class="pl-list">${wrongP.map(p => `<button class="card pl-item" data-pl="${p.id}">${capsule(p, num(idx(p)))}<span class="pl-it"><b>${esc(p.titulo)}</b><span class="hint">${esc(p.sub)}</span></span></button>`).join('')}</div>` : ''}
+      ${wrongP.length ? `<span class="pl-lab">Vale tomar de novo</span><div class="pl-list">${wrongP.map(p => `<button class="card pl-item" data-pl="${p.id}">${capsule(p, num(p))}<span class="pl-it"><b>${esc(p.titulo)}</b><span class="hint">${esc(p.sub)}</span></span></button>`).join('')}</div>` : ''}
       <div class="pl-acts"><button class="btn primary block" id="plAgain">${IC.bolt}Outra dose de reforço</button><button class="btn ghost block" id="plHome">Ver todas as pílulas</button></div>`;
   }
 
