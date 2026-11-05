@@ -3,7 +3,8 @@
    complementados por referências padrão (Ministério da Saúde, KDIGO e livros-texto).
    Campos de cada pílula:
      n           número (ordem da lista); extra:true = pílula bônus
-     busca       questões do banco puxadas automaticamente: t = temas do banco, re = palavras (regex)
+     busca       questões puxadas do banco (só SOI e Integradora): t = temas, re = palavras (regex),
+                 nao = palavras que excluem, fora = IDs excluídos
      questoes    IDs fixos (somam com a busca)
      gancho      caso curto antes da explicação (o: alternativas, a: índice da certa)
      ideia       a frase que explica o tema inteiro (**negrito**; \n separa parágrafos)
@@ -201,7 +202,11 @@ window.PL_PILULAS = [
     cor: "#e06b9a",
     titulo: "Alergias e intolerâncias alimentares",
     sub: "Imunidade × enzima",
-    busca: {t:["alergia", "intestino", "diarreiaped"], re:"alerg|lactose|lactase|anafil|APLV|IgE|hipersensibilidade"},
+    busca: {
+      t: ["alergia", "intestino", "diarreiaped"],
+      re: "alerg|lactose|lactase|anafil|APLV|IgE|hipersensibilidade",
+      fora: ["INT-2021.1-27", "INT-2023.2-05", "INT-2025.2-23"]
+    },
     questoes: [],
     gancho: {
       caso: "Menino de 8 anos come amendoim. Em 10 minutos: urticária no corpo todo, lábios inchados, chiado no peito e PA baixa.",
@@ -279,7 +284,11 @@ window.PL_PILULAS = [
     cor: "#26a3b2",
     titulo: "Doenças inflamatórias intestinais e SII",
     sub: "Crohn × retocolite × intestino irritável",
-    busca: {t:["intestino", "colon"], re:"Crohn|colite|retocolite|ulcerativa|inflamatória intestinal|irritável|SII|Roma"},
+    busca: {
+      t: ["intestino", "colon"],
+      re: "Crohn|colite|retocolite|ulcerativa|inflamatória intestinal|irritável|SII|Roma",
+      fora: ["INT-2021.1-27", "INT-2022.1-34", "INT-2023.1-34", "INT-2024.2-38"]
+    },
     questoes: ["SOI-2023.1-07", "SOI-2024.1-14", "SOI-2024.2-09", "SOI-2023.1-10", "SOI-2024.2-12", "SOI-2025.2-08"],
     gancho: {
       caso: "Mulher, 24 anos, diarreia sem sangue há 2 anos, perda de peso, fístula perianal e um episódio de obstrução intestinal. A mãe teve o mesmo quadro.",
@@ -365,7 +374,8 @@ window.PL_PILULAS = [
     sub: "Oxiúro, áscaris, estrongiloides, ancilóstomo",
     busca: {
       t: ["parasitoses"],
-      re: "Ascaris|ascar|Enterobius|oxiur|enterob|Strongyloides|estrongil|Ancylostoma|ancilost|Necator|Trichuris|tricur|albendazol|mebendazol|ivermectina"
+      re: "Ascaris|ascar|Enterobius|oxiur|enterob|Strongyloides|estrongil|Ancylostoma|ancilost|Necator|Trichuris|tricur|albendazol|mebendazol|ivermectina",
+      fora: ["INT-2026.1-32"]
     },
     questoes: ["SOI-2023.1-01", "SOI-2024.1-01", "SOI-2024.1-05", "SOI-2024.2-08", "SOI-2024.2-11", "SOI-2025.2-07", "SOI-2025.2-15"],
     gancho: {
@@ -443,7 +453,7 @@ window.PL_PILULAS = [
     cor: "#5b8f3a",
     titulo: "Esquistossomose e teníase",
     sub: "Caramujo, cercária, carne crua",
-    busca: {t:["parasitoses"], re:"Schisto|esquist|mansoni|Taenia|tênia|teníase|cisticerc|caramujo|praziquantel"},
+    busca: {t:["parasitoses"], re:"Schisto|esquist|mansoni|Taenia|tênia|teníase|cisticerc|caramujo|praziquantel", fora:["INT-2026.1-32", "INT-2026.1-35"]},
     questoes: [],
     gancho: {
       caso: "Agricultor que toma banho em lagoa com caramujos. Diarreia crônica intermitente, fígado e baço aumentados, eosinofilia.",
@@ -527,7 +537,7 @@ window.PL_PILULAS = [
     cor: "#38a37a",
     titulo: "Giardíase × amebíase",
     sub: "Cisto, fecal-oral, metronidazol",
-    busca: {t:["parasitoses", "intestino", "diarreiaped"], re:"Giardia|giard|Entamoeba|ameb|protozo"},
+    busca: {t:["parasitoses", "intestino", "diarreiaped"], re:"Giardia|giard|Entamoeba|ameb|protozo", fora:["INT-2025.2-23"]},
     questoes: ["SOI-2022.2-01", "SOI-2023.1-15", "SOI-2024.1-03", "SOI-2024.1-04", "SOI-2024.2-02", "SOI-2025.2-06", "SOI-2025.2-10"],
     gancho: {
       caso: "Criança de 5 anos, de creche, com diarreia aquosa, distensão e cólicas há 5 semanas. Sem sangue e sem febre. Metade da turma está igual.",
@@ -608,7 +618,11 @@ window.PL_PILULAS = [
     cor: "#3a8fb0",
     titulo: "Diarreias agudas e crônicas",
     sub: "Tempo, mecanismo e hidratação",
-    busca: {t:["intestino", "diarreiaped"], re:"diarr|desidrat|reidrat|SRO|plano [ABC]|osmótica|secret|celíaca|rotav|hemolítico-urêmica"},
+    busca: {
+      t: ["intestino", "diarreiaped"],
+      re: "diarr|desidrat|reidrat|SRO|plano [ABC]|osmótica|secret|celíaca|rotav|hemolítico-urêmica",
+      nao: "Crohn|colite ulcerativa|retocolite"
+    },
     questoes: [],
     gancho: {
       caso: "Criança de 2 anos, diarreia aquosa há 2 dias. Irritada, olhos fundos, bebe com sede, a prega da pele desaparece lentamente.",
@@ -1248,7 +1262,7 @@ window.PL_PILULAS = [
     cor: "#3f7fd1",
     titulo: "Lesão renal aguda (IRA)",
     sub: "Pré-renal, renal e pós-renal",
-    busca: {t:["rim"], re:"aguda|LRA|IRA|pré-renal|pre-renal|tubular|pós-renal|ofídic|Crotalus|ureia/creatinina"},
+    busca: {t:["rim"], re:"aguda|LRA|IRA|pré-renal|pre-renal|tubular|pós-renal|ofídic|Crotalus|ureia/creatinina", fora:["INT-2024.2-13", "INT-2025.2-05"]},
     questoes: [],
     gancho: {
       caso: "Idoso com diarreia intensa há 3 dias, PA 90/60, urinando pouco. Creatinina 2,4 (antes 1,0), ureia/creatinina > 40, sódio urinário baixo, sedimento urinário normal.",
@@ -1319,7 +1333,7 @@ window.PL_PILULAS = [
     cor: "#2f6aa8",
     titulo: "Doença renal crônica (DRC)",
     sub: "TFG, albuminúria e proteção do rim",
-    busca: {t:["rim"], re:"crônica|cronica|DRC|KDIGO|albuminúria|albumina/creatinina|CKD|cistatina"},
+    busca: {t:["rim"], re:"crônica|cronica|DRC|KDIGO|albuminúria|albumina/creatinina|CKD|cistatina", fora:["INT-2026.1-04"]},
     questoes: [],
     gancho: {
       caso: "Mulher, 60 anos, diabética e hipertensa. TFG 52 e relação albumina/creatinina 120 mg/g em duas medidas com 3 meses de intervalo.",
@@ -1480,7 +1494,7 @@ window.PL_PILULAS = [
     cor: "#a34a6b",
     titulo: "Neoplasias renais",
     sub: "Células claras, Wilms e benignos",
-    busca: {t:["urologia", "geral"], re:"renal|rim |rins|Wilms|células claras|oncocitoma|angiomiolipoma|urotelial"},
+    busca: {t:["urologia", "geral"], re:"renal|rim |rins|Wilms|células claras|oncocitoma|angiomiolipoma|urotelial", fora:["INT-2022.1-05"]},
     questoes: [],
     gancho: {
       caso: "Homem, 58 anos, fumante: hematúria, dor lombar e massa no flanco. TC: massa sólida e heterogênea no rim, invadindo a veia renal, e nódulos nos pulmões.",
@@ -1554,7 +1568,8 @@ window.PL_PILULAS = [
     sub: "Beta-hCG, idade gestacional e métodos",
     busca: {
       t: ["gineco", "adolescente", "prenatal", "parto"],
-      re: "hCG|HCG|contracep|anticoncep|DIU|planejamento (familiar|reprodutivo)|data provável|amenorreia da lactação|levonorgestrel|corpo lúteo|teste de gravidez"
+      re: "hCG|HCG|contracep|anticoncep|DIU|planejamento (familiar|reprodutivo)|data provável|amenorreia da lactação|levonorgestrel|corpo lúteo|teste de gravidez",
+      fora: ["INT-2022.1-37", "INT-2023.1-44", "INT-2024.2-27", "INT-2022.1-27", "INT-2025.2-13", "INT-2024.2-28", "INT-2024.2-18", "INT-2023.1-23"]
     },
     questoes: [],
     gancho: {
@@ -1912,7 +1927,7 @@ window.PL_PILULAS = [
     cor: "#d4b21f",
     titulo: "Icterícia e exames do fígado",
     sub: "Direta × indireta",
-    busca: {t:["biliopanc", "figado"], re:"icterícia|bilirrubina|colúria|acolia|GGT|fosfatase"},
+    busca: {t:["biliopanc", "figado"], re:"icterícia|bilirrubina|colúria|acolia|GGT|fosfatase", fora:["INT-2021.1-30", "INT-2025.2-10"]},
     questoes: ["SOI-2023.1-09", "SOI-2025.2-05", "SOI-2025.2-12", "SOI-2024.2-03"],
     gancho: {
       caso: "Bilirrubina total 8 mg/dL com predomínio de direta, fosfatase alcalina e GGT altas, urina cor de coca-cola e fezes claras.",

@@ -18,8 +18,15 @@
     if (QCACHE[p.id]) return QCACHE[p.id];
     const ids = new Set((p.questoes || []).filter(id => BYID[id]));
     if (p.busca) {
-      const re = new RegExp(p.busca.re, 'i'), ts = new Set(p.busca.t);
-      Q.forEach(q => { if (ts.has(q.t) && re.test(q.s + ' ' + (q.o || []).map(o => o[1]).join(' ') + ' ' + (q.r || ''))) ids.add(q.id); });
+      // só SOI e Integradora; na Integradora que informa o módulo, só as de SOI
+      const doSOI = q => q.d === 'SOI' || (q.d === 'INT' && (!q.m || /SOI/.test(q.m)));
+      const re = new RegExp(p.busca.re, 'i'), nao = p.busca.nao ? new RegExp(p.busca.nao, 'i') : null;
+      const ts = new Set(p.busca.t), fora = new Set(p.busca.fora || []);
+      Q.forEach(q => {
+        if (!doSOI(q) || !ts.has(q.t) || fora.has(q.id)) return;
+        const txt = q.s + ' ' + (q.o || []).map(o => o[1]).join(' ') + ' ' + (q.r || '');
+        if (re.test(txt) && !(nao && nao.test(txt))) ids.add(q.id);
+      });
     }
     return (QCACHE[p.id] = [...ids].map(id => BYID[id]));
   }
