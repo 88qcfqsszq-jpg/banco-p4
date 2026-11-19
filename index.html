@@ -404,7 +404,7 @@ function stemHTML(s){
 const app=document.getElementById('app'), appbarIn=document.getElementById('appbarIn'), tabbar=document.getElementById('tabbar');
 let NAV={tab:'temas',view:'home',topic:null};
 let S=null; let timerId=null; let search='';
-const F={d:new Set(DORDER),t:new Set(Object.keys(TOP)),s0:SEMS[0],s1:SEMS[SEMS.length-1],kind:'all',ofc:false,status:'all',count:20,mode:'treino',just:false};
+const F={d:new Set(),t:new Set(),s0:SEMS[0],s1:SEMS[SEMS.length-1],kind:'all',ofc:false,status:'all',count:20,mode:'treino',just:false};
 function setHdr(){const h=document.getElementById('appbar').offsetHeight;document.documentElement.style.setProperty('--hdr',(h+8)+'px');document.documentElement.style.setProperty('--hdr0',(h-1)+'px');}
 window.addEventListener('resize',setHdr);
 window.addEventListener('scroll',()=>document.getElementById('appbar').classList.toggle('scrolled',scrollY>4),{passive:true});
@@ -532,24 +532,24 @@ function renderDisc(){
       </div>
     </div>`}).join('')}</div></section>`;
   app.querySelectorAll('[data-exam]').forEach(b=>b.onclick=()=>{const k=b.dataset.exam,[d,s]=k.split('|');start(EXAMS[k].slice(),{title:isMapes(d)?DISC[d].n+' · MAPES':`${DISC[d].n} ${s}`,original:true});});
-  app.querySelectorAll('[data-dtrain]').forEach(b=>b.onclick=()=>{F.d=new Set([b.dataset.dtrain]);F.t=new Set(Object.keys(TOP));NAV={tab:'build',view:'home'};render();window.scrollTo(0,0);toast(DISC[b.dataset.dtrain].n+' selecionada');});
+  app.querySelectorAll('[data-dtrain]').forEach(b=>b.onclick=()=>{F.d=new Set([b.dataset.dtrain]);F.t=new Set();NAV={tab:'build',view:'home'};render();window.scrollTo(0,0);toast(DISC[b.dataset.dtrain].n+' selecionada');});
 }
 
 /* ============ Simulado builder ============ */
 function pool(){
-  return Q.filter(q=>(F.d.size===0||F.d.has(q.d))&&F.t.has(q.t)&&(isMapes(q.d)||(q.sem>=F.s0&&q.sem<=F.s1))&&(F.kind==='all'||q.k===F.kind)&&(!F.ofc||q.g==='oficial')&&(F.mode!=='prova'||q.k==='mc')&&!q.dup
+  return Q.filter(q=>(F.d.size===0||F.d.has(q.d))&&(F.t.size===0||F.t.has(q.t))&&(isMapes(q.d)||(q.sem>=F.s0&&q.sem<=F.s1))&&(F.kind==='all'||q.k===F.kind)&&(!F.ofc||q.g==='oficial')&&(F.mode!=='prova'||q.k==='mc')&&!q.dup
     &&(F.status==='all'||(F.status==='new'&&!hist(q))||(F.status==='wrong'&&hist(q)&&hist(q).last===false)));
 }
 const chip=(attr,val,on,label,n)=>`<button class="chip" ${attr}="${val}" aria-pressed="${on}"><span class="ck">${I.check}</span>${esc(label)}${n!=null?` <span class="n num">${n}</span>`:''}</button>`;
 function renderBuild(){
-  const p=pool(), n=F.count&&F.count<p.length?F.count:p.length, allT=F.t.size===Object.keys(TOP).length;
+  const p=pool(), n=F.count&&F.count<p.length?F.count:p.length, allT=F.t.size===Object.keys(TOP).length, nT=Object.keys(TOP).length;
   const openState=[...app.querySelectorAll('details.grp')].map(d=>d.open);
   app.innerHTML=`<section class="sec" style="margin-top:0"><div class="sec-h"><h2>Montar simulado</h2><button class="linkbtn" id="resetF">Limpar filtros</button></div>
   <div class="dock2 card sticky"><div class="cnt"><b class="num">${p.length}</b><div class="hint">questões com esses filtros</div></div><button class="btn primary" data-go ${p.length?'':'disabled'}>${I.play}Começar ${n}</button></div>
   <div class="card"><div class="chead"><span class="stp">1</span><div class="ttl"><h3>Disciplinas</h3><span class="sub">${F.d.size?F.d.size+' de '+DORDER.length+' marcadas':'Todas (nenhuma marcada = sem filtro)'}</span></div><button class="linkbtn" id="dAll">${F.d.size===DORDER.length?'Nenhuma':'Todas'}</button></div>
     <div class="cbody"><div class="chips">${DORDER.map(d=>chip('data-d',d,F.d.has(d),DISC[d].n)).join('')}</div></div>
   </div>
-  <div class="card"><div class="chead"><span class="stp">2</span><div class="ttl"><h3>Temas</h3><span class="sub">${allT?'Todos os temas':F.t.size+' de '+Object.keys(TOP).length+' temas'}</span></div><button class="linkbtn" id="tAll">${allT?'Nenhum':'Todos'}</button></div>
+  <div class="card"><div class="chead"><span class="stp">2</span><div class="ttl"><h3>Temas</h3><span class="sub">${F.t.size?F.t.size+' de '+nT+' marcados':'Nenhum marcado = todos os temas'}</span></div><button class="linkbtn" id="tAll">${allT?'Nenhum':'Todos'}</button></div>
     <div class="cbody" style="gap:0;padding-top:4px">${AREAS.map((a,i)=>{const on=a.t.filter(t=>F.t.has(t.id)).length;return `<details class="grp" ${openState[i]?'open':''}><summary><span class="t"><span class="dot" style="background:${ACOL[a.id].c}"></span>${esc(a.n)}</span><span class="c"><span class="num">${on}/${a.t.length}</span>${I.down}</span></summary>
       <div class="chips"><button class="linkbtn" data-area="${a.id}" style="width:100%;text-align:left;padding:2px 0 4px">${on===a.t.length?'Desmarcar área':'Marcar área inteira'}</button>${a.t.filter(t=>byTopic[t.id]).map(t=>chip('data-t',t.id,F.t.has(t.id),t.n,byTopic[t.id].length)).join('')}</div></details>`}).join('')}</div>
   </div>
@@ -560,8 +560,8 @@ function renderBuild(){
     <div class="seg" id="kindSeg">${[['all','Todas'],['mc','Objetivas'],['open','Abertas']].map(([k,l])=>`<button data-v="${k}" aria-pressed="${F.kind===k}">${l}</button>`).join('')}</div>
     <span class="label">Situação</span>
     <div class="seg" id="statSeg">${[['all','Todas'],['new','Não feitas'],['wrong','Errei']].map(([k,l])=>`<button data-v="${k}" aria-pressed="${F.status===k}">${l}</button>`).join('')}</div>
-    <span class="label">Quantidade</span>
-    <div class="seg" id="countSeg">${[10,20,40,0].map(c=>`<button data-v="${c}" aria-pressed="${F.count===c}">${c||'Todas'}</button>`).join('')}</div>
+    <span class="label">Quantidade de questões</span>
+    <div class="selrow"><select id="cntSel" aria-label="Quantidade">${[5,10,15,20,30,40,50,100].map(c=>`<option value="${c}" ${F.count===c?'selected':''}>${c} questões</option>`).join('')}<option value="0" ${F.count===0?'selected':''}>Todas (${p.length})</option><option value="x" ${F.count!==0&&![5,10,15,20,30,40,50,100].includes(F.count)?'selected':''}>Outra quantidade…</option></select>${F.count!==0&&![5,10,15,20,30,40,50,100].includes(F.count)?`<input id="cntNum" type="number" inputmode="numeric" min="1" max="${p.length||1}" value="${F.count}" aria-label="Quantidade específica" style="width:90px">`:''}</div>
     <span class="label">Formato</span>
     <div class="seg" id="modeSeg"><button data-v="treino" aria-pressed="${F.mode==='treino'}">Treino</button><button data-v="prova" aria-pressed="${F.mode==='prova'}">Prova</button></div>
     <p class="hint" style="margin:-4px 0 0">${F.mode==='treino'?'Correção e comentário depois de cada questão.':'Cronômetro e correção só no final. Só questões objetivas.'}</p>
@@ -576,10 +576,12 @@ function renderBuild(){
   app.querySelectorAll('[data-area]').forEach(b=>b.onclick=()=>{const a=AREAS.find(x=>x.id===b.dataset.area),all=a.t.every(t=>F.t.has(t.id));a.t.forEach(t=>all?F.t.delete(t.id):F.t.add(t.id));re();});
   document.getElementById('dAll').onclick=()=>{F.d=F.d.size===DORDER.length?new Set():new Set(DORDER);re();};
   document.getElementById('tAll').onclick=()=>{F.t=allT?new Set():new Set(Object.keys(TOP));re();};
-  document.getElementById('resetF').onclick=()=>{Object.assign(F,{d:new Set(DORDER),t:new Set(Object.keys(TOP)),s0:SEMS[0],s1:SEMS[SEMS.length-1],kind:'all',ofc:false,status:'all',count:20,mode:'treino',just:false});re();toast('Filtros limpos');};
+  document.getElementById('resetF').onclick=()=>{Object.assign(F,{d:new Set(),t:new Set(),s0:SEMS[0],s1:SEMS[SEMS.length-1],kind:'all',ofc:false,status:'all',count:20,mode:'treino',just:false});re();toast('Filtros limpos');};
   document.getElementById('s0').onchange=e=>{F.s0=e.target.value;if(F.s0>F.s1)F.s1=F.s0;re();};
   document.getElementById('s1').onchange=e=>{F.s1=e.target.value;if(F.s1<F.s0)F.s0=F.s1;re();};
-  [['kindSeg','kind',x=>x],['statSeg','status',x=>x],['countSeg','count',x=>+x],['modeSeg','mode',x=>x]].forEach(([id,k,cv])=>app.querySelectorAll('#'+id+' button').forEach(b=>b.onclick=()=>{F[k]=cv(b.dataset.v);re();}));
+  [['kindSeg','kind',x=>x],['statSeg','status',x=>x],['modeSeg','mode',x=>x]].forEach(([id,k,cv])=>app.querySelectorAll('#'+id+' button').forEach(b=>b.onclick=()=>{F[k]=cv(b.dataset.v);re();}));
+  document.getElementById('cntSel').onchange=e=>{const v=e.target.value;F.count=v==='x'?(F.count&&![5,10,15,20,30,40,50,100].includes(F.count)?F.count:25):+v;re();};
+  const cn=document.getElementById('cntNum');if(cn)cn.onchange=e=>{F.count=Math.max(1,parseInt(e.target.value)||1);re();};
   document.getElementById('tOfc').onclick=()=>{F.ofc=!F.ofc;re();};
   document.getElementById('tJust').onclick=()=>{F.just=!F.just;re();};
   app.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{let l=shuffle(pool());if(F.count)l=l.slice(0,F.count);start(l,{mode:F.mode,just:F.just,title:'Simulado'});});
