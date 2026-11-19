@@ -537,7 +537,7 @@ function renderDisc(){
 
 /* ============ Simulado builder ============ */
 function pool(){
-  return Q.filter(q=>F.d.has(q.d)&&F.t.has(q.t)&&(isMapes(q.d)||(q.sem>=F.s0&&q.sem<=F.s1))&&(F.kind==='all'||q.k===F.kind)&&(!F.ofc||q.g==='oficial')&&(F.mode!=='prova'||q.k==='mc')&&!q.dup
+  return Q.filter(q=>(F.d.size===0||F.d.has(q.d))&&F.t.has(q.t)&&(isMapes(q.d)||(q.sem>=F.s0&&q.sem<=F.s1))&&(F.kind==='all'||q.k===F.kind)&&(!F.ofc||q.g==='oficial')&&(F.mode!=='prova'||q.k==='mc')&&!q.dup
     &&(F.status==='all'||(F.status==='new'&&!hist(q))||(F.status==='wrong'&&hist(q)&&hist(q).last===false)));
 }
 const chip=(attr,val,on,label,n)=>`<button class="chip" ${attr}="${val}" aria-pressed="${on}"><span class="ck">${I.check}</span>${esc(label)}${n!=null?` <span class="n num">${n}</span>`:''}</button>`;
@@ -546,7 +546,7 @@ function renderBuild(){
   const openState=[...app.querySelectorAll('details.grp')].map(d=>d.open);
   app.innerHTML=`<section class="sec" style="margin-top:0"><div class="sec-h"><h2>Montar simulado</h2><button class="linkbtn" id="resetF">Limpar filtros</button></div>
   <div class="dock2 card sticky"><div class="cnt"><b class="num">${p.length}</b><div class="hint">questões com esses filtros</div></div><button class="btn primary" data-go ${p.length?'':'disabled'}>${I.play}Começar ${n}</button></div>
-  <div class="card"><div class="chead"><span class="stp">1</span><div class="ttl"><h3>Disciplinas</h3><span class="sub">${F.d.size} de ${DORDER.length} marcadas</span></div><button class="linkbtn" id="dAll">${F.d.size===DORDER.length?'Nenhuma':'Todas'}</button></div>
+  <div class="card"><div class="chead"><span class="stp">1</span><div class="ttl"><h3>Disciplinas</h3><span class="sub">${F.d.size?F.d.size+' de '+DORDER.length+' marcadas':'Todas (nenhuma marcada = sem filtro)'}</span></div><button class="linkbtn" id="dAll">${F.d.size===DORDER.length?'Nenhuma':'Todas'}</button></div>
     <div class="cbody"><div class="chips">${DORDER.map(d=>chip('data-d',d,F.d.has(d),DISC[d].n)).join('')}</div></div>
   </div>
   <div class="card"><div class="chead"><span class="stp">2</span><div class="ttl"><h3>Temas</h3><span class="sub">${allT?'Todos os temas':F.t.size+' de '+Object.keys(TOP).length+' temas'}</span></div><button class="linkbtn" id="tAll">${allT?'Nenhum':'Todos'}</button></div>
