@@ -541,6 +541,8 @@ function pool(){
     &&(F.status==='all'||(F.status==='new'&&!hist(q))||(F.status==='wrong'&&hist(q)&&hist(q).last===false)));
 }
 const chip=(attr,val,on,label,n)=>`<button class="chip" ${attr}="${val}" aria-pressed="${on}"><span class="ck">${I.check}</span>${esc(label)}${n!=null?` <span class="n num">${n}</span>`:''}</button>`;
+let TQ='';
+const nrm=x=>String(x).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 function renderBuild(){
   const p=pool(), n=F.count&&F.count<p.length?F.count:p.length, allT=F.t.size===Object.keys(TOP).length, nT=Object.keys(TOP).length;
   const openState=[...app.querySelectorAll('details.grp')].map(d=>d.open);
@@ -550,6 +552,7 @@ function renderBuild(){
     <div class="cbody"><div class="chips">${DORDER.map(d=>chip('data-d',d,F.d.has(d),DISC[d].n)).join('')}</div></div>
   </div>
   <div class="card"><div class="chead"><span class="stp">2</span><div class="ttl"><h3>Temas</h3><span class="sub">${F.t.size?F.t.size+' de '+nT+' marcados':'Nenhum marcado = todos os temas'}</span></div><button class="linkbtn" id="tAll">${allT?'Nenhum':'Todos'}</button></div>
+    <div style="padding:0 16px 8px"><input id="tSearch" type="search" placeholder="Buscar tema…" value="${esc(TQ)}" autocomplete="off" style="width:100%;box-sizing:border-box;padding:10px 12px;border-radius:12px;border:1px solid var(--line2);background:var(--surface2);color:var(--fg);font:inherit"></div>
     <div class="cbody" style="gap:0;padding-top:4px">${AREAS.map((a,i)=>{const on=a.t.filter(t=>F.t.has(t.id)).length;return `<details class="grp" ${openState[i]?'open':''}><summary><span class="t"><span class="dot" style="background:${ACOL[a.id].c}"></span>${esc(a.n)}</span><span class="c"><span class="num">${on}/${a.t.length}</span>${I.down}</span></summary>
       <div class="chips"><button class="linkbtn" data-area="${a.id}" style="width:100%;text-align:left;padding:2px 0 4px">${on===a.t.length?'Desmarcar área':'Marcar área inteira'}</button>${a.t.filter(t=>byTopic[t.id]).map(t=>chip('data-t',t.id,F.t.has(t.id),t.n,byTopic[t.id].length)).join('')}</div></details>`}).join('')}</div>
   </div>
@@ -580,6 +583,8 @@ function renderBuild(){
   document.getElementById('s0').onchange=e=>{F.s0=e.target.value;if(F.s0>F.s1)F.s1=F.s0;re();};
   document.getElementById('s1').onchange=e=>{F.s1=e.target.value;if(F.s1<F.s0)F.s0=F.s1;re();};
   [['kindSeg','kind',x=>x],['statSeg','status',x=>x],['modeSeg','mode',x=>x]].forEach(([id,k,cv])=>app.querySelectorAll('#'+id+' button').forEach(b=>b.onclick=()=>{F[k]=cv(b.dataset.v);re();}));
+  const applyTQ=()=>{const q=nrm(TQ.trim());app.querySelectorAll('details.grp').forEach(g=>{let any=false;g.querySelectorAll('[data-t]').forEach(c=>{const m=!q||nrm(c.textContent).includes(q);c.style.display=m?'':'none';if(m)any=true;});const ab=g.querySelector('[data-area]');if(ab)ab.style.display=q?'none':'';g.style.display=any?'':'none';if(q&&any)g.open=true;});};
+  const ts=document.getElementById('tSearch');ts.oninput=()=>{TQ=ts.value;applyTQ();};applyTQ();
   document.getElementById('cntSel').onchange=e=>{const v=e.target.value;F.count=v==='x'?(F.count&&![5,10,15,20,30,40,50,100].includes(F.count)?F.count:25):+v;re();};
   const cn=document.getElementById('cntNum');if(cn)cn.onchange=e=>{F.count=Math.max(1,parseInt(e.target.value)||1);re();};
   document.getElementById('tOfc').onclick=()=>{F.ofc=!F.ofc;re();};
