@@ -24,7 +24,7 @@
       const ts = new Set(p.busca.t), fora = new Set(p.busca.fora || []);
       Q.forEach(q => {
         if (!doSOI(q) || !ts.has(q.t) || fora.has(q.id)) return;
-        const txt = q.s + ' ' + (q.o || []).map(o => o[1]).join(' ') + ' ' + (q.r || '');
+        const txt = q.s + ' ' + (q.o || []).map(o => o[1]).join(' ') + (p.busca.enun ? '' : ' ' + (q.r || '')); // enun:true = só enunciado e alternativas (sem o comentário)
         if (re.test(txt) && !(nao && nao.test(txt))) ids.add(q.id);
       });
     }

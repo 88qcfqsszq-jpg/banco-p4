@@ -1,10 +1,10 @@
 /* PÍLULAS PARA PROVA · SOI IV
-   23 assuntos (n 1–23) + extras. Fontes: enunciados, gabaritos e comentários das provas do banco Exatamente,
+   23 assuntos do cronograma (n 1–23) + 17 da APG S3 (n 24–40, em conteudo-apg3.js) + extras (n 41–42). Fontes: enunciados, gabaritos e comentários das provas do banco Exatamente,
    complementados por referências padrão (Ministério da Saúde, KDIGO e livros-texto).
    Campos de cada pílula:
      n           número (ordem da lista); extra:true = pílula bônus
      busca       questões puxadas do banco (só SOI e Integradora): t = temas, re = palavras (regex),
-                 nao = palavras que excluem, fora = IDs excluídos
+                 nao = palavras que excluem, fora = IDs excluídos, enun:true = procura só no enunciado e nas alternativas (não no comentário)
      questoes    IDs fixos (somam com a busca)
      gancho      caso curto antes da explicação (o: alternativas, a: índice da certa)
      ideia       a frase que explica o tema inteiro (**negrito**; \n separa parágrafos)
@@ -1922,7 +1922,7 @@ window.PL_PILULAS = [
   },
   {
     id: "ictericia",
-    n: 24,
+    n: 41,
     extra: true,
     cor: "#d4b21f",
     titulo: "Icterícia e exames do fígado",
@@ -2005,7 +2005,7 @@ window.PL_PILULAS = [
   },
   {
     id: "gastrico",
-    n: 25,
+    n: 42,
     extra: true,
     cor: "#9a5bc4",
     titulo: "Câncer gástrico: Lauren e Borrmann",
