@@ -298,19 +298,19 @@
       },
       {
         tabela: {
-          titulo: "Testes",
-          cols: ["Treponêmico", "Não treponêmico", "Interpretação"],
+          titulo: "Testes: como ler o resultado",
+          cols: ["Resultado", "O que significa"],
           rows: [
-            ["Reagente", "Reagente", "Sífilis ativa ou cicatriz sorológica (ver história e título)"],
-            ["Reagente", "Não reagente", "Sífilis muito recente, cicatriz ou falso-positivo; **gestante sem tratamento prévio, tratar**"],
-            ["Não reagente", "Reagente", "**Falso-positivo do VDRL** (gestação, autoimune); confirmar com outro treponêmico"],
-            ["Não reagente", "Não reagente", "Ausência de infecção ou janela; repetir se exposição"]
+            ["**Teste rápido (treponêmico) +** e **VDRL +**", "**Sífilis ativa**, ou cicatriz sorológica de sífilis já tratada (ver história e título)"],
+            ["**Teste rápido +** e **VDRL −**", "Sífilis muito recente, cicatriz ou falso-positivo. **Gestante sem tratamento prévio: tratar**"],
+            ["**Teste rápido −** e **VDRL +**", "**Falso-positivo do VDRL** (gestação, doença autoimune). Confirmar com outro treponêmico"],
+            ["**Os dois −**", "Sem infecção, ou ainda na janela imunológica. Repetir se houve exposição"]
           ]
         }
       },
       {
         tabela: {
-          titulo: "Tratamento (penicilina benzatina)",
+titulo: "Tratamento (penicilina benzatina)",
           cols: ["Fase", "Esquema"],
           rows: [
             ["**Recente** (primária, secundária, latente < 1 ano)", "**2,4 milhões UI IM dose única**"],
