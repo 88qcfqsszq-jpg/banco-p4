@@ -642,6 +642,7 @@ function mcHTML(q,chosen,cut,revealed){
     return `<div class="${cls}" role="radio" aria-checked="${k===chosen}" tabindex="${revealed?-1:0}" data-k="${k}" ${revealed?'aria-disabled="true"':''}>
       ${badge?`<span class="badge">${badge}</span>`:''}<span class="k">${k.toUpperCase()}</span><span class="tx">${esc(t)}</span>
       ${revealed?'<span></span>':`<button class="cut" data-cut="${k}">${cut[k]?'Desfazer':'Riscar'}</button>`}</div>`}).join('')}</div>
+    ${q.rec?'<p class="hint">As alternativas erradas desta questão foram reconstruídas (as originais não estavam no banco). A resposta correta é a oficial.</p>':''}
     ${S.just&&!revealed&&S.mode==='treino'?`<label class="label" for="jtx">Por que essa alternativa?</label><textarea id="jtx" placeholder="Mínimo de 20 caracteres">${esc(S.jt[q.id]||'')}</textarea>`:''}`;
 }
 const openHTML=(q,revealed)=>revealed?'':`<label class="label" for="jtx">Sua resposta</label><textarea id="jtx" placeholder="Escreva ou só pense na resposta e toque em Ver resposta">${esc(S.jt[q.id]||'')}</textarea>`;

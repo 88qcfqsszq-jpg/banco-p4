@@ -1,6 +1,6 @@
 // Exatamente + PATHMED V10 + Pílulas + OSCE + N3 da Galega
 // Offline não é prioridade; o cache serve apenas como tolerância a falhas e aceleração.
-const VERSION='exatamente-v24-n3';
+const VERSION='exatamente-v25-n3';
 const CORE=['./','index.html','manifest.webmanifest','exatamente-192.png','exatamente-512.png','exatamente-apple.png','pathmed/missoes.js','pathmed/casos.js','pathmed/pathmed.js','pathmed/pathmed.css','pilulas/conteudo.js','pilulas/conteudo-apg3.js','pilulas/pilulas.js','pilulas/pilulas.css','osce.js','osce.css','osce-dados.js','n3.js','n3.css'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(VERSION).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==VERSION).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
