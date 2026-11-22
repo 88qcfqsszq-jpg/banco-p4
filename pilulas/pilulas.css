@@ -149,3 +149,6 @@
 .pl-acts{display:grid;gap:8px}
 .pl-acts .btn svg{width:18px;height:18px}
 .btn svg{flex:none}
+
+.pl-legend{margin:0 0 8px;font-size:13px;color:var(--muted);font-weight:600}
+.pl-legend b{color:var(--c);font-family:var(--display)}

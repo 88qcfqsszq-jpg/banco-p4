@@ -119,7 +119,8 @@
       t.cols.length > 2 ? `<div class="pl-rc"><span>${md(t.cols[j + 1])}</span>${md(c)}</div>` : `<div class="pl-rc">${md(c)}</div>`).join('')}</div>`).join('')}</div>`;
     if (cmp) return `<div class="pl-narrow">${cards}</div><div class="pl-tw pl-wide"><table class="pl-tab"><thead><tr>${t.cols.map(c => `<th>${md(c)}</th>`).join('')}</tr></thead>
       <tbody>${t.rows.map(r => `<tr>${r.map((c, j) => j ? `<td>${md(c)}</td>` : `<th scope="row">${md(c)}</th>`).join('')}</tr>`).join('')}</tbody></table></div>`;
-    return cards;
+    const leg = t.cols.length === 2 && t.cols[0] ? `<p class="pl-legend"><b>${md(t.cols[0])}</b> → ${md(t.cols[1])}</p>` : '';
+    return leg + cards;
   }
   function blocoHTML(b) {
     if (b.tabela) return `<h3 class="pl-bt">${md(b.tabela.titulo)}</h3>${tabelaHTML(b.tabela)}`;
