@@ -1113,7 +1113,7 @@ titulo: "Tratamento (penicilina benzatina)",
     cor: "#3f9a8c",
     titulo: "Cervicites: clamídia, gonorreia e Mycoplasma",
     sub: "Epitélio cilíndrico, NAAT e ceftriaxona + azitromicina",
-    busca: {"t": ["gineco", "itu", "adolescente", "violencia", "rn"], "re": "cervicite|clam[íi]dia|chlamydia|gonor|gonoc|neisseria|mycoplasma|uretrite|NAAT|ceftriaxona", "enun": true},
+    busca: {"t": ["gineco", "itu", "adolescente", "violencia", "rn"], "re": "cervicite|clam[íi]dia|chlamydia|gonor|gonoc|neisseria|mycoplasma|uretrite|NAAT|ceftriaxona", "enun": true, "fora": ["INT-2022.1-12"]},
     questoes: [],
     gancho: {
       caso: "Mulher de 22 anos, parceria nova, sem sintomas. Ao exame, secreção mucopurulenta no orifício do colo e sangramento fácil ao toque do cotonete.",
