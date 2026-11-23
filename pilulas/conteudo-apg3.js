@@ -1712,4 +1712,226 @@ titulo: "Tratamento (penicilina benzatina)",
     ],
     bula: "Complementar aos 6 meses, amassada com garfo, leite materno em livre demanda. Sem mel e leite de vaca no 1º ano; sem açúcar antes dos 2. Ferro 1 mg/kg/dia (6 a 24 m), vitamina D 400 UI. Marasmo = energia; kwashiorkor = proteína."
   }
+  ,{
+    id: "hiv",
+    n: 43,
+    extra: true,
+    cor: "#c2403d",
+    titulo: "HIV e aids: diagnóstico, TARV e prevenção",
+    sub: "2 testes rápidos + carga viral, TDF/3TC + DTG, PrEP e PEP",
+    busca: {"t": ["gineco", "prenatal", "politicas", "adolescente", "violencia", "rn"], "re": "antirretrovir|TARV|PrEP|\\bPEP\\b|CD4|carga viral|zidovudina|infecção pelo HIV|HIV positiv|HIV\\+|soropositiv|vivendo com HIV|\\bAIDS\\b", "enun": true},
+    questoes: ["INT-2022.1-02", "INT-2022.1-20", "INT-2023.2-02", "INT-2023.1-23", "INT-2022.2-04"],
+    gancho: {
+      caso: "Homem de 28 anos, sexo sem preservativo há 3 semanas, chega com febre, faringite, adenomegalia cervical e exantema maculopapular. O teste rápido de HIV deu não reagente.",
+      p: "Qual a conduta mais adequada?",
+      o: ["Descartar HIV, pois o teste foi negativo", "Solicitar carga viral (RNA do HIV), pois pode ser infecção aguda em janela", "Iniciar penicilina benzatina", "Solicitar só o CD4"],
+      a: 1
+    },
+    ideia: "O **HIV** é um retrovírus que infecta o **linfócito T CD4**. Transmite-se por **via sexual**, **sanguínea** e **vertical** (gestação, parto e amamentação). Não se transmite por abraço, talheres ou mosquito.\nA **infecção aguda** (2 a 4 semanas após a exposição) lembra mononucleose: febre, faringite, exantema, linfonodos. É a fase de **maior carga viral e maior transmissibilidade**, e os testes de anticorpo ainda podem ser negativos (**janela imunológica**). A **carga viral** é o primeiro exame a positivar.\nHoje **toda pessoa com HIV inicia TARV, qualquer que seja o CD4**, o mais rápido possível (idealmente em até 7 dias). Esquema inicial: **TDF + 3TC + DTG** (dolutegravir). Com a carga viral **indetectável por mais de 6 meses**, **não há transmissão sexual**: **I = I** (indetectável = intransmissível).\nA prevenção combinada inclui **preservativo, PrEP, PEP, testagem, tratamento de ISTs e prevenção da transmissão vertical**.",
+    mapa: [
+      {
+        fluxo: {
+          titulo: "Diagnóstico (Ministério da Saúde)",
+          passos: [
+            "**Teste rápido 1** (triagem), com aconselhamento",
+            "Reagente: **Teste rápido 2** (outro fabricante) para confirmar",
+            "Dois reagentes: **diagnóstico**; colher **carga viral** e **CD4**",
+            "Discordantes ou suspeita de infecção aguda: **carga viral (RNA)** / seguir fluxograma do laboratório",
+            "Não reagente com exposição recente: **repetir em 30 dias** (janela) ou pedir carga viral"
+          ]
+        }
+      },
+      {
+        tabela: {
+          titulo: "CD4 e infecções oportunistas",
+          cols: ["Situação", "O que lembrar"],
+          rows: [
+            ["**CD4 < 200**", "Risco de **pneumocistose**: profilaxia com **SMX-TMP**. Pesquisar antígeno criptocócico"],
+            ["**CD4 < 100** + IgG toxoplasma positiva", "Profilaxia de **toxoplasmose** (SMX-TMP já cobre)"],
+            ["**CD4 < 50**", "**CMV** (retinite) e **Mycobacterium avium**"],
+            ["**Pneumocistose**", "Tosse seca, dispneia, **hipoxemia**, **infiltrado intersticial difuso**, LDH alto. Trata **SMX-TMP** (+ **prednisona** se PaO₂ < 70)"],
+            ["**Neurotoxoplasmose**", "Lesões com **realce em anel**. **Sulfadiazina + pirimetamina**"],
+            ["**Criptococose**", "Meningite subaguda, **tinta nanquim**, antígeno criptocócico. **Anfotericina**"],
+            ["**Candidíase esofágica**", "Odinofagia, placas na boca. Define aids"],
+            ["**Sarcoma de Kaposi**", "Associado ao **HHV-8**"],
+            ["**Tuberculose**", "Principal causa de morte. Fazer **tratamento preventivo (TPT)** se PT ≥ 5 mm"]
+          ]
+        }
+      },
+      {
+        tabela: {
+          titulo: "PrEP × PEP",
+          cols: ["", "PrEP (antes)", "PEP (depois)"],
+          rows: [
+            ["**Para quem**", "Pessoa **HIV negativa** com maior risco: HSH, trans, profissionais do sexo, parceria sorodiferente sem carga viral suprimida", "**Exposição de risco** recente: sexual, **violência sexual**, acidente com material biológico"],
+            ["**Esquema**", "**TDF + FTC** (1 comprimido por dia)", "**TDF + 3TC + DTG**"],
+            ["**Quando**", "Antes; testar HIV antes de começar", "O **mais rápido possível, até 72 horas**"],
+            ["**Duração**", "Enquanto houver risco", "**28 dias**"],
+            ["**Seguimento**", "Testar HIV, função renal e outras ISTs periodicamente", "Testar HIV no início, 30 e 90 dias"]
+          ]
+        }
+      },
+      {
+        tabela: {
+          titulo: "Gestação e transmissão vertical",
+          cols: ["Tema", "Conduta"],
+          rows: [
+            ["**Risco sem profilaxia**", "Cerca de **25 a 30%**. Com TARV e carga viral suprimida: **< 1%**"],
+            ["**Triagem**", "**1º trimestre, 3º trimestre e parto** (teste rápido)"],
+            ["**TARV na gestante**", "Inicia **imediatamente**, mesmo esquema (**TDF + 3TC + DTG**)"],
+            ["**Via de parto**", "**Cesárea eletiva às 38 semanas** se carga viral **≥ 1.000** (ou desconhecida) após 34 semanas"],
+            ["**No parto**", "**AZT venoso** se carga viral ≥ 1.000 ou desconhecida"],
+            ["**Recém-nascido**", "**Profilaxia com antirretroviral** logo após o parto (AZT) e acompanhamento"],
+            ["**Amamentação**", "**Contraindicada** como regra: inibir a lactação e dar **fórmula infantil**"]
+          ]
+        }
+      }
+    ],
+    gatilhos: [
+      ["Febre, faringite, exantema e linfonodos após exposição sexual", "Infecção aguda pelo HIV: pedir carga viral"],
+      ["Tosse seca, dispneia e infiltrado intersticial difuso com CD4 baixo", "Pneumocistose"],
+      ["Lesão cerebral com realce em anel", "Neurotoxoplasmose"],
+      ["Exposição sexual há menos de 72 h", "PEP por 28 dias"],
+      ["Gestante com carga viral ≥ 1.000 após 34 semanas", "Cesárea eletiva às 38 semanas + AZT intraparto"],
+      ["Carga viral indetectável há mais de 6 meses", "I = I: sem transmissão sexual"]
+    ],
+    pegadinhas: [
+      ["Teste rápido negativo exclui infecção recente.", "Existe janela: repetir ou pedir carga viral."],
+      ["Inicia-se TARV apenas se CD4 < 350.", "Toda pessoa com HIV trata, qualquer CD4."],
+      ["A mãe com carga viral indetectável pode amamentar sem restrição.", "No Brasil a regra é contraindicar e dar fórmula."],
+      ["A PEP pode começar em até uma semana.", "Até 72 horas, o quanto antes."],
+      ["PrEP substitui o preservativo contra todas as ISTs.", "Protege só contra HIV."]
+    ],
+    relampago: [
+      {
+        p: "Esquema inicial preferencial de TARV no Brasil:",
+        o: ["TDF + 3TC + DTG", "AZT + 3TC + efavirenz", "Apenas AZT", "TDF + FTC isolados"],
+        a: 0,
+        x: "Dois ITRN (tenofovir e lamivudina) mais dolutegravir, inibidor da integrase."
+      },
+      {
+        p: "Gestante com carga viral de 5.000 cópias/mL na 36ª semana. Via de parto:",
+        o: ["Cesárea eletiva às 38 semanas", "Parto vaginal sem restrição", "Fórceps de alívio", "Indução às 41 semanas"],
+        a: 0,
+        x: "Carga viral ≥ 1.000 ou desconhecida: cesárea eletiva às 38 semanas e AZT intraparto."
+      },
+      {
+        p: "Abaixo de qual CD4 se faz profilaxia primária da pneumocistose?",
+        o: ["200", "500", "350", "50"],
+        a: 0,
+        x: "SMX-TMP também protege contra toxoplasmose."
+      }
+    ],
+    bula: "HIV: janela imunológica, carga viral positiva primeiro. Dois testes rápidos reagentes = diagnóstico. TARV para todos (TDF + 3TC + DTG), CD4 < 200 profilaxia com SMX-TMP. PEP até 72 h por 28 dias. PrEP: TDF + FTC. Gestante: TARV, cesárea às 38 semanas se CV ≥ 1.000, AZT, fórmula. I = I."
+  }
+  ,{
+    id: "hpv",
+    n: 44,
+    extra: true,
+    cor: "#b04a9c",
+    titulo: "HPV: condiloma, colo do útero e vacina",
+    sub: "6/11 × 16/18, DNA-HPV, colposcopia e vacinação",
+    busca: {"t": ["gineco", "politicas", "adolescente", "violencia"], "re": "HPV|papilomav|condiloma|colpocitolog|papanicolau|colposcopia|colo do [úu]tero|verruga|NIC |Bethesda", "enun": true, "fora": ["INT-2023.1-35"]},
+    questoes: ["INT-2021.1-18", "INT-2022.1-03", "INT-2022.1-12", "INT-2022.2-10", "INT-2022.2-16", "INT-2026.1-24"],
+    gancho: {
+      caso: "Mulher de 35 anos, assintomática, faz rastreamento com teste DNA-HPV. O resultado é positivo para HPV 16.",
+      p: "Qual a conduta?",
+      o: ["Repetir o teste em 5 anos", "Encaminhar direto à colposcopia", "Vacinar contra HPV e liberar", "Tratar com ácido tricloroacético"],
+      a: 1
+    },
+    ideia: "O **HPV** é um vírus de DNA, o mais frequente das ISTs. Os tipos **6 e 11** (baixo risco) causam **condiloma acuminado** e papilomatose respiratória do RN. Os tipos **16 e 18** (alto risco) causam o **câncer do colo do útero** (16: escamoso; 18: adenocarcinoma), além de ânus, vulva, vagina, pênis e orofaringe.\nA maioria das infecções é **transitória**: cerca de **90% são eliminadas em até 2 anos**. O câncer surge da **infecção persistente** por tipo de alto risco (as proteínas virais **E6** degrada p53 e **E7** inativa Rb), favorecida por **tabagismo, imunossupressão e HIV**. A progressão de lesão precursora a câncer leva **anos**, por isso o rastreamento funciona.\nNo Brasil, o rastreamento é o **teste DNA-HPV**, de **25 a 64 anos, a cada 5 anos** se negativo. O preservativo **reduz, mas não elimina** o risco. A **vacina** é a melhor prevenção primária.",
+    mapa: [
+      {
+        tabela: {
+          titulo: "Baixo risco × alto risco",
+          cols: ["", "Baixo risco (6 e 11)", "Alto risco (16 e 18)"],
+          rows: [
+            ["**Lesão**", "**Condiloma acuminado**, papilomatose respiratória", "**NIC 2/3**, carcinoma escamoso (16) e **adenocarcinoma (18)**"],
+            ["**Aspecto**", "Verrugas em couve-flor, vulva, vagina, colo, ânus, pênis", "Geralmente **sem sintoma**; achado de rastreamento"],
+            ["**Tratamento**", "Local: ácido tricloroacético, podofilina, imiquimode, crioterapia, exérese", "**Excisão** da zona de transformação (EZT)"],
+            ["**Vacina**", "Quadrivalente protege (6, 11, 16 e 18)", "Protege contra 16 e 18"]
+          ]
+        }
+      },
+      {
+        fluxo: {
+          titulo: "Rastreamento com DNA-HPV (25 a 64 anos)",
+          passos: [
+            "**DNA-HPV negativo**: repetir em **5 anos**",
+            "**Positivo para 16 ou 18**: **colposcopia** direta",
+            "**Positivo para outros tipos de alto risco**: **citologia** reflexa",
+            "Citologia **alterada** (ASC-US ou pior): **colposcopia**",
+            "Citologia **normal**: repetir **DNA-HPV em 12 meses**"
+          ]
+        }
+      },
+      {
+        tabela: {
+          titulo: "Citologia, colposcopia e conduta",
+          cols: ["Tema", "O que saber"],
+          rows: [
+            ["**Bethesda**", "**ASC-US, ASC-H, LSIL (NIC 1), HSIL (NIC 2/3), AGC** e carcinoma"],
+            ["**Colposcopia**", "**Ácido acético 3 a 5%**: epitélio **acetobranco**. **Lugol (Schiller)**: área **iodo-negativa**. Achados graves: **mosaico, pontilhado grosseiro, vasos atípicos**"],
+            ["**NIC 1**", "Regride na maioria: **observar** (repetir exame)"],
+            ["**NIC 2/3**", "**Excisão** (EZT/CAF); nunca só observar. Conização se lesão endocervical"],
+            ["**Carcinoma in situ**", "Excisão; histerectomia só em casos selecionados"],
+            ["**Gestante**", "Colposcopia pode ser feita; **biópsia só se suspeita de invasão**; **tratar depois do parto**"],
+            ["**Condiloma na gestação**", "**TCA ou crioterapia**; evitar **podofilina e imiquimode**. **Cesárea só se obstrução do canal** de parto"],
+            ["**Imunossuprimida (HIV)**", "Rastreamento **mais frequente** e maior risco de lesão persistente"]
+          ]
+        }
+      },
+      {
+        tabela: {
+          titulo: "Vacina HPV (SUS)",
+          cols: ["Tema", "O que saber"],
+          rows: [
+            ["**Tipo**", "**Quadrivalente** (6, 11, 16 e 18), vacina **não viva**"],
+            ["**Público**", "**Meninas e meninos de 9 a 14 anos**"],
+            ["**Esquema**", "**Dose única** no público de 9 a 14 anos (calendário atual do PNI)"],
+            ["**Imunossuprimidos**", "**3 doses** (0, 2 e 6 meses): HIV, transplantados, oncológicos"],
+            ["**Outros grupos**", "Vítimas de violência sexual, usuários de PrEP e papilomatose respiratória recorrente, conforme o PNI"],
+            ["**Gestação**", "**Não vacinar**; sem risco se vacinada sem saber, apenas adiar as próximas doses"],
+            ["**Após a vacina**", "O **rastreamento continua** igual: ela não protege contra todos os tipos"]
+          ]
+        }
+      }
+    ],
+    gatilhos: [
+      ["Verrugas em couve-flor na vulva", "Condiloma (HPV 6 e 11): tratamento local"],
+      ["DNA-HPV positivo para 16 ou 18", "Colposcopia direta"],
+      ["Epitélio acetobranco, mosaico e vasos atípicos", "Lesão de alto grau: biópsia"],
+      ["NIC 2 ou 3 confirmado na biópsia", "Excisão da zona de transformação"],
+      ["Adenocarcinoma de colo", "HPV 18"],
+      ["Gestante com condiloma", "TCA ou crioterapia; sem podofilina"]
+    ],
+    pegadinhas: [
+      ["Toda infecção por HPV evolui para câncer.", "Cerca de 90% são eliminadas em 2 anos."],
+      ["Mulher vacinada não precisa de rastreamento.", "Precisa: a vacina não cobre todos os tipos."],
+      ["Condiloma é indicação de cesárea.", "Só se obstruir o canal de parto."],
+      ["NIC 2/3 é tratado só com observação.", "Excisão."],
+      ["Podofilina é boa opção na gestante.", "Contraindicada."]
+    ],
+    relampago: [
+      {
+        p: "Tipos de HPV que causam condiloma acuminado:",
+        o: ["6 e 11", "16 e 18", "31 e 33", "45 e 58"],
+        a: 0,
+        x: "Baixo risco oncogênico."
+      },
+      {
+        p: "Intervalo do rastreamento com DNA-HPV negativo:",
+        o: ["5 anos", "1 ano", "3 anos", "10 anos"],
+        a: 0,
+        x: "Faixa de 25 a 64 anos."
+      },
+      {
+        p: "Achado de lesão intraepitelial de alto grau na histologia:",
+        o: ["NIC 2/3", "NIC 1", "ASC-US", "Metaplasia escamosa"],
+        a: 0,
+        x: "NIC 2/3 equivale a HSIL e exige excisão."
+      }
+    ],
+    bula: "HPV: 6/11 condiloma (tratamento local; gestante TCA ou crioterapia), 16/18 câncer. DNA-HPV de 25 a 64 anos a cada 5 anos; 16/18 positivo vai à colposcopia. NIC 1 observa, NIC 2/3 excisão. Vacina quadrivalente de 9 a 14 anos (dose única; imunossuprimidos 3 doses); não vacina gestante; rastreamento continua."
+  }
 );
