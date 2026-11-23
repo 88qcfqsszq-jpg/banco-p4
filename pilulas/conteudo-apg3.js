@@ -1017,7 +1017,7 @@ titulo: "Tratamento (penicilina benzatina)",
     cor: "#d1a23a",
     titulo: "Vulvovaginites",
     sub: "Vaginose, candidíase e tricomoníase",
-    busca: {"t": ["gineco", "puberdade", "prenatal", "adolescente", "itu"], "re": "vaginose|candid[íi]ase|tricomon|corrimento|leucorreia|gardnerella|vaginite|clue cells|Amsel|metronidazol|fluconazol|miconazol", "enun": true},
+    busca: {"t": ["gineco", "puberdade", "prenatal", "adolescente", "itu"], "re": "vaginose|candid[íi]ase|tricomon|corrimento|leucorreia|gardnerella|vaginite|clue cells|Amsel|metronidazol|fluconazol|miconazol", "enun": true, "fora": ["INT-2023.1-35"]},
     questoes: [],
     gancho: {
       caso: "Mulher de 25 anos, corrimento fino e acinzentado com odor de peixe, pior após a relação. pH 5,5, teste das aminas positivo, sem inflamação. Clue cells no exame a fresco.",
