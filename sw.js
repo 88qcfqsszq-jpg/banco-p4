@@ -1,7 +1,7 @@
 // Exatamente + PATHMED V10 + Pílulas + OSCE + N3 da Galega
 // Offline não é prioridade; o cache serve apenas como tolerância a falhas e aceleração.
-const VERSION='exatamente-v46-apg';
-const CORE=['./','index.html','manifest.webmanifest','exatamente-192.png','exatamente-512.png','exatamente-apple.png','pathmed/missoes.js','pathmed/casos.js','pathmed/pathmed.js','pathmed/pathmed.css','pilulas/conteudo.js','pilulas/conteudo-apg3.js','pilulas/pilulas.js','pilulas/pilulas.css','osce.js','osce.css','osce-dados.js','n3.js','n3.css','apg/apg-dados-1.js','apg/apg-dados-2.js','apg/apg.js','apg/apg.css'];
+const VERSION='exatamente-v47-apg';
+const CORE=['./','index.html','manifest.webmanifest','exatamente-192.png','exatamente-512.png','exatamente-apple.png','pathmed/missoes.js','pathmed/casos.js','pathmed/pathmed.js','pathmed/pathmed.css','pilulas/conteudo.js','pilulas/conteudo-apg3.js','pilulas/pilulas.js','pilulas/pilulas.css','osce.js','osce.css','osce-dados.js','n3.js','n3.css','apg/apg-dados-1.js','apg/apg-dados-2.js','apg/apg-dados-hpv-1.js','apg/apg-dados-hpv-2.js','apg/img/hpv-coilocitose.jpg','apg/img/hpv-condiloma-anal.jpg','apg/img/hpv-condiloma-penis.jpg','apg/img/hpv-e6e7.jpg','apg/img/hpv-formas.jpg','apg/img/hpv-genoma.jpg','apg/img/hpv-jec.jpg','apg/img/hpv-nomenclatura.jpg','apg/img/hpv-oral.jpg','apg/img/hpv-progressao.jpg','apg/img/hpv-risco.jpg','apg/img/hpv-verruga-mao.jpg','apg/img/hpv-verrugas-mao2.jpg','apg/apg.js','apg/apg.css'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(VERSION).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==VERSION).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
 self.addEventListener('fetch',e=>{

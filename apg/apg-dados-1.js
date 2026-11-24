@@ -2,6 +2,7 @@
 window.APG_DATA = window.APG_DATA || { casos: [] };
 window.APG_DATA.casos.push({
   id: 'hiv',
+  ic: '🧬',
   titulo: 'HIV e AIDS',
   sub: 'Tutoria · 3 objetivos: do vírus ao tratamento, à prevenção e ao cuidado integral',
   cor: '#d6455d',

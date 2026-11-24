@@ -16,6 +16,8 @@
     mic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
     stop: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>'
   };
+  const figHtml = f => !f ? '' : `<figure class="apg-fig">${f.svg ? `<div class="apg-svg">${(window.APG_SVG || {})[f.svg] || ''}</div>` : `<img src="${esc(f.src)}" alt="${esc(f.cap)}" loading="lazy" data-zoom="1">`}<figcaption>${esc(f.cap)}</figcaption></figure>`;
+  const zoom = () => app.querySelectorAll('img[data-zoom]').forEach(im => im.onclick = () => { const o = document.createElement('div'); o.className = 'apg-zoom'; o.innerHTML = `<img src="${im.src}" alt="">`; o.onclick = () => o.remove(); document.body.appendChild(o); });
   const go = (view, extra) => { NAV = Object.assign({ tab: 'apg', view }, extra || {}); render(); scrollTo(0, 0); };
   const hoje = () => new Date().toISOString().slice(0, 10);
   const tick = id => { const p = pc(id); p.dias[hoje()] = (p.dias[hoje()] || 0) + 1; save(); };
@@ -56,9 +58,9 @@
     appbar();
     let h = `<section class="card apg-hero"><span class="apg-badge">APG</span><h1>Domine e discuta</h1>
       <p class="muted">Aprender é <b>explicar em voz alta</b>. Escolha o caso e siga a jornada: ler, explicar, perguntar “por quê”, ser sabatinado e narrar.</p></section>`;
-    h += D.casos.map(c => `<button class="card apg-case" data-c="${c.id}" style="--cc:${c.cor}"><span class="apg-ci">🧬</span><span class="apg-cb"><b>${esc(c.titulo)}</b><small>${esc(c.sub)}</small>
+    h += D.casos.map(c => `<button class="card apg-case" data-c="${c.id}" style="--cc:${c.cor}"><span class="apg-ci">${c.ic || '🧬'}</span><span class="apg-cb"><b>${esc(c.titulo)}</b><small>${esc(c.sub)}</small>
       <span class="apg-bar"><i style="width:${totalPct(c)}%"></i></span><em class="num">${totalPct(c)}% da jornada${streak(c.id) ? ' · 🔥 ' + streak(c.id) + ' dia' + (streak(c.id) > 1 ? 's' : '') : ''}</em></span></button>`).join('');
-    h += `<p class="muted small apg-foot">Mais casos (como HPV) entram aqui com o mesmo motor. Usa o microfone do navegador: no iPhone, permita o acesso quando o Safari pedir.</p>`;
+    h += `<p class="muted small apg-foot">Novos casos entram aqui com o mesmo motor. Usa o microfone do navegador: no iPhone, permita o acesso quando o Safari pedir.</p>`;
     app.innerHTML = h;
     app.querySelectorAll('[data-c]').forEach(b => b.onclick = () => go('caso', { c: b.dataset.c }));
   }
@@ -80,6 +82,7 @@
       <button class="card apg-tile" data-v="tutor"><span>🎓</span><b>Tutor</b><small>Perguntas do roteiro com “e por quê?”</small><em class="num">${p.tutor} respondidas</em></button>
       <button class="card apg-tile" data-v="rel"><span>⏱️</span><b>Relâmpago</b><small>Fale 1 minuto sobre um tema</small><em class="num">${p.rel} treinos</em></button>
       <button class="card apg-tile" data-v="casos"><span>🩺</span><b>Caso clínico</b><small>Narre o raciocínio passo a passo</small><em class="num">${Object.keys(p.casos).length}/${c.casos.length} feitos</em></button>
+      ${c.visual ? `<button class="card apg-tile" data-v="visual"><span>👁️</span><b>Olho clínico</b><small>Veja a imagem e fale o diagnóstico</small><em class="num">${Object.keys(p.vis || {}).length}/${c.visual.length} vistas</em></button>` : ''}
       <button class="card apg-tile" data-v="fala"><span>🎤</span><b>Fala em público</b><small>Recite as mensagens-âncora</small></button></div></div>`;
     app.innerHTML = h;
     app.querySelectorAll('[data-m]').forEach(b => b.onclick = () => go('mod', { c: c.id, m: b.dataset.m, passo: 0 }));
@@ -96,12 +99,13 @@
       <div class="apg-steps">${nomes.map((n, i) => `<button data-p="${i}" aria-pressed="${passo === i}" class="${[s.ler, s.exp, s.pq][i] ? 'ok' : ''}">${n}</button>`).join('')}</div>`;
     if (passo === 0) {
       h += `<p class="muted small">Leia um cartão por vez, devagar. Para cada um, tente <b>dizer a ideia com suas palavras</b> antes de passar ao próximo.</p>`;
-      h += m.ler.map((x, i) => `<article class="card apg-read"><b>${i + 1}. ${esc(x.t)}</b><p>${fmt(x.d)}</p></article>`).join('');
+      h += m.ler.map((x, i) => `<article class="card apg-read"><b>${i + 1}. ${esc(x.t)}</b><p>${fmt(x.d)}</p>${figHtml(x.fig)}</article>`).join('');
       h += `<button class="btn primary block" id="nx">${s.ler ? 'Ir para explicar' : 'Li tudo, agora vou explicar'}</button>`;
     } else if (passo === 1) h += explicar(m, s);
     else h += porques(m, s);
     app.innerHTML = h;
     app.querySelectorAll('[data-p]').forEach(b => b.onclick = () => { stopMic(); go('mod', { c: c.id, m: m.id, passo: +b.dataset.p }); });
+    zoom();
     const nx = document.getElementById('nx');
     if (nx) nx.onclick = () => { s.ler = true; save(); tick(c.id); go('mod', { c: c.id, m: m.id, passo: 1 }); };
     if (passo === 1) bindExplicar(c, m, s);
@@ -226,6 +230,26 @@
     document.getElementById('nx').onclick = () => { if (s + 1 < ps.length) go('casos', { c: c.id, k: NAV.k, s: s + 1 }); else { pc(c.id).casos[NAV.k] = true; save(); tick(c.id); go('casos', { c: c.id }); } };
   }
 
+  /* ---------- olho clínico ---------- */
+  function visual() {
+    const c = byId(NAV.c); appbar({ back: c.titulo, onBack: () => go('caso', { c: c.id }) });
+    const p = pc(c.id); p.vis = p.vis || {};
+    const n = c.visual.length; let i = NAV.i;
+    if (i == null) { const nao = c.visual.map((_, k) => k).filter(k => !p.vis[k]); i = nao.length ? rnd(nao) : Math.floor(Math.random() * n); }
+    const x = c.visual[i];
+    app.innerHTML = `<section class="card apg-hero"><span class="apg-badge">👁️ Olho clínico</span><h1>O que você vê?</h1><p class="muted small">Descreva a imagem em voz alta como na APG e depois confira.</p></section>
+      <section class="card apg-q"><figure class="apg-fig big"><img src="${esc(x.img)}" alt="Imagem clínica" data-zoom="1"></figure>
+      <h2>${esc(x.p)}</h2>
+      <div class="apg-rec"><button class="btn primary" id="rc">${IC.mic}<span>Responder</span></button><span class="apg-time num" id="tm">0:00</span></div>
+      <div class="apg-heard" id="hd" hidden></div>
+      <div id="rs" hidden><p class="apg-ans">${fmt(x.a)}</p><p class="muted small"><b>Por quê:</b> ${fmt(x.pq)}</p>
+        <div class="apg-row"><button class="btn" data-r="0">Errei</button><button class="btn" data-r="1">Parcial</button><button class="btn primary" data-r="2">Acertei</button></div></div></section>`;
+    zoom();
+    const rc = document.getElementById('rc'), tm = document.getElementById('tm'), hd = document.getElementById('hd'), rs = document.getElementById('rs'); let on = false;
+    rc.onclick = () => { if (!on) { on = true; rc.innerHTML = IC.stop + '<span>Terminei</span>'; timer(tm, 0); hd.hidden = false; hd.textContent = SRok() ? 'Ouvindo…' : 'Fale em voz alta.'; if (SRok()) startMic(t => hd.textContent = 'Você disse: ' + t); } else { on = false; stopMic(); rc.hidden = true; rs.hidden = false; rs.scrollIntoView({ behavior: 'smooth', block: 'center' }); } };
+    app.querySelectorAll('[data-r]').forEach(b => b.onclick = () => { if (b.dataset.r === '2') p.vis[i] = true; save(); tick(c.id); go('visual', { c: c.id }); });
+  }
+
   /* ---------- fala em público ---------- */
   function fala() {
     const c = byId(NAV.c); appbar({ back: c.titulo, onBack: () => go('caso', { c: c.id }) });
@@ -240,7 +264,7 @@
     render() {
       stopMic();
       const v = NAV.view;
-      if (v === 'caso') caso(); else if (v === 'mod') mod(); else if (v === 'tutor') tutor(); else if (v === 'rel') rel(); else if (v === 'casos') casos(); else if (v === 'fala') fala();
+      if (v === 'caso') caso(); else if (v === 'mod') mod(); else if (v === 'tutor') tutor(); else if (v === 'rel') rel(); else if (v === 'casos') casos(); else if (v === 'visual') visual(); else if (v === 'fala') fala();
       else { NAV = { tab: 'apg', view: 'home' }; home(); }
     }
   };
