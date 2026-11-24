@@ -171,13 +171,14 @@
       <div class="apg-rec"><button class="btn primary" id="rc">${IC.mic}<span>Responder</span></button><span class="apg-time num" id="tm">0:00</span></div>
       <div class="apg-heard" id="hd" hidden></div>
       <div id="rs" hidden><details class="apg-model" open><summary>Resposta de referência</summary><p>${fmt(t.a)}</p></details>
-        <div class="apg-fu"><small class="apg-k">O tutor insiste</small><h3>${esc(seg)}</h3><p class="muted small">Responda em voz alta de novo antes de seguir.</p></div>
+        <div class="apg-fu"><small class="apg-k">O tutor insiste</small><h3>${esc(seg.q)}</h3><p class="muted small">Responda em voz alta de novo e depois confira.</p><button class="btn" id="sg">Ver resposta</button><p class="apg-ans" id="sa" hidden>${fmt(seg.a)}</p></div>
         <p class="muted small">Como foi?</p><div class="apg-row"><button class="btn" data-r="0">Travei</button><button class="btn" data-r="1">Parcial</button><button class="btn primary" data-r="2">Dominei</button></div></div></section>`;
     const rc = document.getElementById('rc'), tm = document.getElementById('tm'), hd = document.getElementById('hd'), rs = document.getElementById('rs'); let on = false;
     rc.onclick = () => {
       if (!on) { on = true; rc.innerHTML = IC.stop + '<span>Terminei</span>'; timer(tm, 0); hd.hidden = false; hd.textContent = SRok() ? 'Ouvindo…' : 'Fale em voz alta.'; if (SRok()) startMic(x => hd.textContent = 'Você disse: ' + x); }
       else { on = false; stopMic(); rc.innerHTML = IC.mic + '<span>Responder</span>'; rs.hidden = false; rs.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
     };
+    document.getElementById('sg').onclick = () => { document.getElementById('sa').hidden = false; document.getElementById('sg').hidden = true; };
     app.querySelectorAll('[data-r]').forEach(b => b.onclick = () => { const p = pc(c.id); p.tutor++; save(); tick(c.id); const u = used.concat(idx); go('tutor', { c: c.id, used: u.length >= c.tutor.length ? [] : u }); });
   }
 

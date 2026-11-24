@@ -123,6 +123,43 @@
     { q: 'Como você daria o diagnóstico a um paciente e o que discutiria?', a: 'Em local reservado e com sigilo, comunicação clara e empática, explicando que é crônico e tratável, avaliando rede de apoio, discutindo parcerias sexuais, adesão e vinculação ao serviço.', seg: ['Como lidar com o medo do estigma?', 'Como favorecer a adesão?'], m: 'm7' }
   ];
 
+
+  /* Respostas das perguntas de aprofundamento do tutor */
+  var SEG = {
+    'E quais exames mostram em que fase o paciente está?': 'O **CD4** mostra o estado da imunidade (abaixo de 200 = aids) e a **carga viral** mostra a velocidade de replicação. A fase também depende da clínica: doença definidora de aids, mesmo com CD4 maior, caracteriza aids.',
+    'Por que 200 é o corte?': 'Porque abaixo de 200 células/mm³ a imunidade celular já não contém germes que o corpo normalmente controla, como o *Pneumocystis*, e o risco de oportunistas sobe de forma marcante. É um corte **epidemiológico e clínico**, não um limite biológico exato.',
+    'Qual enzima é alvo dos ITRN?': 'A **transcriptase reversa**. Os ITRN são análogos de nucleosídeos: entram na cadeia de DNA em formação como “tijolos falsos” e **interrompem** a síntese.',
+    'O que é o reservatório e por que importa?': 'São células de memória infectadas com **provírus latente**, que não produzem vírus e por isso escapam do sistema imune e dos remédios. Importa porque é a razão de **não haver cura** e de o vírus voltar se a TARV for suspensa.',
+    'Por que o intestino é importante?': 'O **GALT** concentra grande parte dos linfócitos CD4, que são destruídos logo nas primeiras semanas. A barreira intestinal falha, bactérias e seus produtos passam para o sangue (**translocação microbiana**) e mantêm o sistema imune ativado.',
+    'A TARV normaliza isso?': '**Em parte.** Ao parar a replicação, o CD4 sobe e a ativação cai, mas a relação CD4/CD8 pode demorar a normalizar ou não normalizar, e persiste inflamação residual, com mais risco cardiovascular, renal e ósseo.',
+    'Por que o sexo anal receptivo é mais arriscado?': 'A mucosa retal é **fina, com microlesões** e rica em células CD4 e dendríticas, então o vírus encontra acesso fácil. Além disso, o contato com grande quantidade de sêmen aumenta a dose do vírus.',
+    'Por que ISTs aumentam o risco?': 'As **úlceras** abrem a barreira da mucosa e a inflamação **atrai CD4 e macrófagos** para o local. Isso torna a pessoa exposta mais suscetível e a pessoa infectada mais transmissora (mais vírus na secreção).',
+    'Que exame você pede então?': '**Teste de 4ª geração (p24 + anticorpos)** e **carga viral**. Eles detectam o vírus ou o antígeno antes de os anticorpos aparecerem.',
+    'Esse paciente transmite mais ou menos?': '**Mais.** Na fase aguda a carga viral é altíssima e o paciente muitas vezes nem sabe que está infectado, o que a torna a fase de maior transmissibilidade.',
+    'Por que a TB aparece em qualquer CD4?': 'Porque o bacilo é mais virulento que os verdadeiros oportunistas e o HIV **aumenta o risco em todos os níveis**. Com CD4 alto a TB é típica; com CD4 baixo, é atípica e disseminada.',
+    'O que muda na TB com CD4 baixo?': 'A resposta imune que forma granuloma e cavitação enfraquece. A TB fica **extrapulmonar, disseminada, sem cavitação** e o Raio-X pode ser normal, por isso usamos também LF-LAM urinário e cultura.',
+    'Por que não basta um teste?': 'Porque o teste de triagem é **muito sensível** e dá falso-positivo. Um segundo teste de **princípio diferente** e a carga viral confirmam e evitam um diagnóstico errado.',
+    'O que é janela imunológica?': 'O intervalo entre a infecção e o momento em que o exame consegue detectá-la. A ordem é **RNA (~10 dias), p24 (~2 semanas), anticorpos (3 a 4 semanas)**. Nesse período o teste pode ser negativo, então repete-se se a exposição foi recente.',
+    'Para que serve o CD4 e a carga viral?': 'O **CD4** diz o tamanho do exército que resta (risco de oportunistas, quando suspender profilaxias). A **carga viral** diz a velocidade do ataque e é a medida de resposta ao tratamento (meta: indetectável).',
+    'Por que não atrasar a TARV esperando a genotipagem?': 'Porque o benefício de tratar cedo é grande, e a maioria dos vírus é sensível ao esquema com dolutegravir. A genotipagem **é colhida antes** e, se mostrar resistência, o esquema é ajustado depois.',
+    'Por que três drogas?': 'O vírus **muta muito e se replica em bilhões** por dia. Com uma droga só, selecionam-se resistentes. Três drogas ao mesmo tempo tornam improvável uma mutação contra todas.',
+    'Quais efeitos adversos você monitora?': '**TDF:** rim e osso (creatinina, fosfato). **Abacavir:** hipersensibilidade (HLA-B*5701). **Efavirenz:** sintomas neuropsiquiátricos. **Dolutegravir:** insônia e ganho de peso. Também a **IRIS** no início do tratamento.',
+    'Por que a genotipagem é feita ainda em uso da droga?': 'Porque, se a droga é suspensa, o **vírus selvagem volta a predominar** e o exame não enxerga as mutações. O resultado seria falsamente tranquilizador.',
+    'O que é IRIS?': 'É a **síndrome de reconstituição imune**: ao iniciar a TARV, a imunidade volta a funcionar e reage de forma exagerada contra um patógeno antes silencioso (como TB ou criptococo), causando **piora paradoxal**. Trata-se o agente, mantém-se a TARV e usa-se corticoide em casos selecionados.',
+    'Por que o corticoide ajuda?': 'Ao morrer, o fungo provoca **inflamação intensa nos alvéolos**, que piora a troca gasosa. O corticoide reduz essa resposta e diminui a lesão pulmonar e a necessidade de ventilação.',
+    'Quando suspender a profilaxia?': 'Quando o **CD4 se mantém acima de 200 por pelo menos 3 meses** com a TARV (o motivo da profilaxia desapareceu).',
+    'Por que tratar sem biópsia?': 'Porque a neurotoxoplasmose é a causa mais comum de lesão focal com CD4 baixo e a **biópsia cerebral é arriscada**. Trata-se empiricamente e a **melhora em 10 a 14 dias** sustenta o diagnóstico.',
+    'E se for meningite sem lesão na imagem?': 'Pensar em **criptococose**: fazer punção lombar com pressão de abertura, antígeno criptocócico (CrAg) e tinta da China, e tratar com anfotericina B e flucitosina, com punções de alívio se houver hipertensão intracraniana.',
+    'Qual interação com a rifampicina?': 'A rifampicina **induz enzimas hepáticas** e reduz os níveis de vários antirretrovirais. Com dolutegravir, **dobra-se a dose** (50 mg de 12/12 h) durante o uso da rifampicina.',
+    'Quem indica PrEP?': 'Pessoas com **maior chance de exposição**: HSH, pessoas trans, profissionais do sexo, parcerias sorodiferentes sem carga viral indetectável, uso irregular de preservativo ou ISTs repetidas. Exige teste de HIV negativo e função renal normal.',
+    'Em quanto tempo iniciar a PEP e por quê?': '**O quanto antes, em até 72 horas**, por 28 dias. Nas primeiras horas o vírus está em poucas células e ainda pode ser contido, antes de se integrar e formar reservatório.',
+    'Por que o parto é o momento de maior risco?': 'Porque o bebê tem **contato direto com sangue e secreções genitais** da mãe e as contrações podem misturar sangue materno e fetal. A carga viral materna no parto é o principal determinante.',
+    'Por que não amamentar?': 'O **leite materno contém vírus e células infectadas** e a amamentação prolongada é uma via de transmissão. Por isso se oferece fórmula láctea, fornecida pelo SUS.',
+    'Como lidar com o medo do estigma?': 'Garantindo **sigilo**, explicando que o HIV é crônico e tratável e que, indetectável, não se transmite (I = I), e avaliando a rede de apoio. Respeitar o tempo de cada pessoa para revelar o diagnóstico.',
+    'Como favorecer a adesão?': 'Com **vínculo, linguagem simples, esquema de comprimido único e rotina**, tratando saúde mental, uso de substâncias e barreiras sociais, sem julgamento. Lembretes e acompanhamento próximo no começo ajudam.'
+  };
+  C.tutor.forEach(function (t) { t.seg = t.seg.map(function (q) { if (!SEG[q]) throw new Error('sem resposta: ' + q); return { q: q, a: SEG[q] }; }); });
+
   /* Relâmpago: tema → pontos que cabem em 1 minuto */
   C.relampago = [
     { t: 'Ciclo viral do HIV', pts: ['Entrada: gp120 + CD4 + CCR5/CXCR4', 'Fusão: gp41', 'Transcrição reversa: RNA → DNA', 'Integração: provírus', 'Montagem e protease', 'Cada etapa é alvo de uma classe'] },
