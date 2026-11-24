@@ -16,7 +16,7 @@
     mic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
     stop: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>'
   };
-  const figHtml = f => !f ? '' : `<figure class="apg-fig">${f.svg ? `<div class="apg-svg">${(window.APG_SVG || {})[f.svg] || ''}</div>` : `<img src="${esc(f.src)}" alt="${esc(f.cap)}" loading="lazy" data-zoom="1">`}<figcaption>${esc(f.cap)}</figcaption></figure>`;
+  const figHtml = f => !f ? '' : `<figure class="apg-fig">${f.svg ? `<div class="apg-svg">${(window.APG_SVG || {})[f.svg] || ''}</div>` : `<img src="apg/${esc(f.src)}" alt="${esc(f.cap)}" loading="lazy" data-zoom="1">`}<figcaption>${esc(f.cap)}</figcaption></figure>`;
   const zoom = () => app.querySelectorAll('img[data-zoom]').forEach(im => im.onclick = () => { const o = document.createElement('div'); o.className = 'apg-zoom'; o.innerHTML = `<img src="${im.src}" alt="">`; o.onclick = () => o.remove(); document.body.appendChild(o); });
   const go = (view, extra) => { NAV = Object.assign({ tab: 'apg', view }, extra || {}); render(); scrollTo(0, 0); };
   const hoje = () => new Date().toISOString().slice(0, 10);
@@ -238,7 +238,7 @@
     if (i == null) { const nao = c.visual.map((_, k) => k).filter(k => !p.vis[k]); i = nao.length ? rnd(nao) : Math.floor(Math.random() * n); }
     const x = c.visual[i];
     app.innerHTML = `<section class="card apg-hero"><span class="apg-badge">👁️ Olho clínico</span><h1>O que você vê?</h1><p class="muted small">Descreva a imagem em voz alta como na APG e depois confira.</p></section>
-      <section class="card apg-q"><figure class="apg-fig big"><img src="${esc(x.img)}" alt="Imagem clínica" data-zoom="1"></figure>
+      <section class="card apg-q"><figure class="apg-fig big"><img src="apg/${esc(x.img)}" alt="Imagem clínica" data-zoom="1"></figure>
       <h2>${esc(x.p)}</h2>
       <div class="apg-rec"><button class="btn primary" id="rc">${IC.mic}<span>Responder</span></button><span class="apg-time num" id="tm">0:00</span></div>
       <div class="apg-heard" id="hd" hidden></div>
