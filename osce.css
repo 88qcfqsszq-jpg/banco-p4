@@ -1,5 +1,5 @@
 /* OSCE · usa as variáveis do Exatamente (--acc, --surface, --line, --ok, --sug...) */
-.tabbar .wrap{grid-template-columns:repeat(6,1fr)}
+.tabbar .wrap{grid-template-columns:repeat(7,1fr)}
 @media (max-width:620px){
   .tabbar .wrap{gap:4px}
   .tabbar button{flex-direction:column;gap:2px;min-height:52px;font-size:10.5px;padding:4px 1px;line-height:1.1}
