@@ -80,7 +80,7 @@
       <button class="card apg-tile" data-v="tutor"><span>🎓</span><b>Tutor</b><small>Perguntas do roteiro com “e por quê?”</small><em class="num">${p.tutor} respondidas</em></button>
       <button class="card apg-tile" data-v="rel"><span>⏱️</span><b>Relâmpago</b><small>Fale 1 minuto sobre um tema</small><em class="num">${p.rel} treinos</em></button>
       <button class="card apg-tile" data-v="casos"><span>🩺</span><b>Caso clínico</b><small>Narre o raciocínio passo a passo</small><em class="num">${Object.keys(p.casos).length}/${c.casos.length} feitos</em></button>
-      <button class="card apg-tile" data-v="fala"><span>🎤</span><b>Fala em público</b><small>Âncoras e técnicas para a APG</small></button></div></div>`;
+      <button class="card apg-tile" data-v="fala"><span>🎤</span><b>Fala em público</b><small>Recite as mensagens-âncora</small></button></div></div>`;
     app.innerHTML = h;
     app.querySelectorAll('[data-m]').forEach(b => b.onclick = () => go('mod', { c: c.id, m: b.dataset.m, passo: 0 }));
     app.querySelectorAll('[data-v]').forEach(b => b.onclick = () => go(b.dataset.v, { c: c.id }));
@@ -229,10 +229,9 @@
   /* ---------- fala em público ---------- */
   function fala() {
     const c = byId(NAV.c); appbar({ back: c.titulo, onBack: () => go('caso', { c: c.id }) });
-    app.innerHTML = `<section class="card apg-hero"><span class="apg-badge">🎤 Fala</span><h1>Para a APG</h1><p class="muted small">Seis mensagens-âncora: se você as domina, sustenta a discussão inteira.</p></section>
+    app.innerHTML = `<section class="card apg-hero"><span class="apg-badge">🎤 Fala</span><h1>Âncoras</h1><p class="muted small">Seis mensagens-âncora: se você as domina, sustenta a discussão inteira.</p></section>
       <section class="card apg-q"><small class="apg-k">Âncoras do caso</small><ol class="apg-anc">${c.ancoras.map(a => `<li>${fmt(a)}</li>`).join('')}</ol>
-      <button class="btn primary block" id="rcA">${IC.mic}<span>Recitar as 6 sem olhar (1 min)</span></button><div class="apg-time num" id="tm">0:00</div><div class="apg-heard" id="hd" hidden></div></section>` +
-      c.fala.map(x => `<article class="card apg-read"><b>${esc(x.t)}</b><p>${fmt(x.d)}</p></article>`).join('');
+      <button class="btn primary block" id="rcA">${IC.mic}<span>Recitar as 6 sem olhar (1 min)</span></button><div class="apg-time num" id="tm">0:00</div><div class="apg-heard" id="hd" hidden></div></section>`;
     const rc = document.getElementById('rcA'), tm = document.getElementById('tm'), hd = document.getElementById('hd'); let on = false;
     rc.onclick = () => { if (!on) { on = true; document.querySelector('.apg-anc').classList.add('hide'); rc.innerHTML = IC.stop + '<span>Terminei</span>'; timer(tm, 0); hd.hidden = false; hd.textContent = SRok() ? 'Ouvindo…' : 'Fale em voz alta.'; if (SRok()) startMic(x => hd.textContent = 'Você disse: ' + x); } else { on = false; stopMic(); document.querySelector('.apg-anc').classList.remove('hide'); rc.innerHTML = IC.mic + '<span>Recitar de novo</span>'; tick(c.id); } };
   }
