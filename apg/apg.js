@@ -99,7 +99,7 @@
       <div class="apg-steps">${nomes.map((n, i) => `<button data-p="${i}" aria-pressed="${passo === i}" class="${[s.ler, s.exp, s.pq][i] ? 'ok' : ''}">${n}</button>`).join('')}</div>`;
     if (passo === 0) {
       h += `<p class="muted small">Leia um cartão por vez, devagar. Para cada um, tente <b>dizer a ideia com suas palavras</b> antes de passar ao próximo.</p>`;
-      h += m.ler.map((x, i) => `<article class="card apg-read"><b>${i + 1}. ${esc(x.t)}</b><p>${fmt(x.d)}</p>${figHtml(x.fig)}</article>`).join('');
+      h += m.ler.map((x, i) => `<article class="card apg-read"><b>${i + 1}. ${esc(x.t)}</b><p>${fmt(x.d)}</p>${[].concat(x.fig || []).map(figHtml).join('')}</article>`).join('');
       h += `<button class="btn primary block" id="nx">${s.ler ? 'Ir para explicar' : 'Li tudo, agora vou explicar'}</button>`;
     } else if (passo === 1) h += explicar(m, s);
     else h += porques(m, s);
